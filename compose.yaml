@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: verde_caixa
+      POSTGRES_USER: verde_caixa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-verde_caixa_local}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verde_caixa -d verde_caixa"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: ./api
+    command: ["npm", "run", "db:deploy"]
+    environment: &api-environment
+      DATABASE_URL: postgresql://verde_caixa:${POSTGRES_PASSWORD:-verde_caixa_local}@postgres:5432/verde_caixa
+      AUTH_ACCESS_SECRET: ${AUTH_ACCESS_SECRET}
+      AUTH_REFRESH_SECRET: ${AUTH_REFRESH_SECRET}
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:8080}
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_FROM: ${SMTP_FROM:-Verde Caixa <no-reply@verdecaixa.local>}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build: ./api
+    environment: *api-environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/api/v1/health').then(r=>{if(!r.ok)process.exit(1)})"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build: .
+
+  proxy:
+    image: caddy:2.10-alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_started
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "8025:8025"
+
+  seed:
+    profiles: ["seed"]
+    build: ./api
+    command: ["npm", "run", "db:seed"]
+    environment:
+      <<: *api-environment
+      ADMIN_NAME: ${ADMIN_NAME:-Administrador}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@verdecaixa.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
