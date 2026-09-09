@@ -1,0 +1,6 @@
+# Metadados preservados do antigo repositório interno do frontend
+webapp/.git-backup/
+
+# Cópias antigas mantidas localmente; os projetos oficiais ficam na raiz
+webapp/api/
+webapp/webapp/

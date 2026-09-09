@@ -1,0 +1,10 @@
+node_modules
+api/node_modules
+.next
+out
+dist
+api/dist
+.git
+.env*
+coverage
+work
