@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "oxc"],
+  "categories": { "correctness": "error" },
+  "env": { "builtin": true, "node": true },
+  "ignorePatterns": ["dist/**", "src/generated/**", "coverage/**"],
+  "rules": {
+    "no-var": "error",
+    "prefer-const": "error",
+    "typescript/no-explicit-any": "off"
+  }
+}

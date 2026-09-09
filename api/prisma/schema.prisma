@@ -1,0 +1,382 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+enum CounterpartyKind {
+  CLIENT
+  SUPPLIER
+  BOTH
+}
+
+enum CategoryKind {
+  INCOME
+  EXPENSE
+}
+
+enum AccountType {
+  BANK
+  CASH
+}
+
+enum ProjectStatus {
+  IN_PROGRESS
+  COMPLETED
+  PAUSED
+}
+
+enum EntryKind {
+  INCOME
+  EXPENSE
+}
+
+enum PaymentPlan {
+  CASH
+  INSTALLMENT
+  RECURRING
+}
+
+enum InstallmentStatus {
+  PENDING
+  SETTLED
+  CANCELED
+}
+
+enum NotificationType {
+  DUE_DATE
+  SETTLEMENT
+  INVITATION
+  SYSTEM
+}
+
+model Company {
+  id                 String             @id @default(uuid()) @db.Uuid
+  name               String
+  document           String?            @unique
+  financialEmail     String?
+  currency           String             @default("BRL") @db.VarChar(3)
+  timezone           String             @default("America/Sao_Paulo")
+  logoUrl             String?
+  reminderEnabled    Boolean            @default(true)
+  reminderDaysBefore Int                @default(3)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  users              User[]
+  roles              Role[]
+  counterparties     Counterparty[]
+  categories         Category[]
+  accounts           FinancialAccount[]
+  projects           Project[]
+  entries            FinancialEntry[]
+  notifications      Notification[]
+  auditLogs           AuditLog[]
+  sequences           SequenceCounter[]
+  invitations        UserInvitation[]
+}
+
+model User {
+  id                  String               @id @default(uuid()) @db.Uuid
+  companyId           String               @db.Uuid
+  roleId              String               @db.Uuid
+  name                String
+  email               String               @unique
+  passwordHash        String
+  status              UserStatus           @default(ACTIVE)
+  lastLoginAt         DateTime?
+  deactivatedAt       DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  company             Company              @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  role                Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  sessions            Session[]
+  passwordResetTokens PasswordResetToken[]
+  notifications       Notification[]
+  auditLogs           AuditLog[]
+  settlements         Settlement[]
+  createdEntries      FinancialEntry[]     @relation("EntryCreator")
+
+  @@index([companyId, status])
+}
+
+model Role {
+  id          String           @id @default(uuid()) @db.Uuid
+  companyId   String           @db.Uuid
+  publicCode  String
+  name        String
+  description String?
+  isSystem    Boolean          @default(false)
+  deactivatedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  company     Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  users       User[]
+  permissions RolePermission[]
+  invitations UserInvitation[]
+
+  @@unique([companyId, publicCode])
+  @@unique([companyId, name])
+}
+
+model Permission {
+  id          String           @id @default(uuid()) @db.Uuid
+  code        String           @unique
+  description String
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  roleId       String     @db.Uuid
+  permissionId String     @db.Uuid
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Session {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @db.Uuid
+  refreshTokenHash String
+  userAgent        String?
+  ipAddress        String?
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}
+
+model UserInvitation {
+  id        String    @id @default(uuid()) @db.Uuid
+  companyId String    @db.Uuid
+  roleId    String    @db.Uuid
+  email     String
+  name      String?
+  tokenHash String    @unique
+  expiresAt DateTime
+  acceptedAt DateTime?
+  createdAt DateTime  @default(now())
+  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role      Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, email])
+}
+
+model Counterparty {
+  id            String           @id @default(uuid()) @db.Uuid
+  companyId     String           @db.Uuid
+  publicCode    String
+  kind          CounterpartyKind
+  name          String
+  document      String?
+  email         String?
+  phone         String?
+  deactivatedAt DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  projects      Project[]
+  entries       FinancialEntry[]
+
+  @@unique([companyId, publicCode])
+  @@unique([companyId, document])
+  @@index([companyId, kind, deactivatedAt])
+}
+
+model Category {
+  id            String       @id @default(uuid()) @db.Uuid
+  companyId     String       @db.Uuid
+  publicCode    String
+  parentId      String?      @db.Uuid
+  name          String
+  kind          CategoryKind
+  deactivatedAt DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  company       Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  parent        Category?    @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children      Category[]   @relation("CategoryTree")
+  entries       FinancialEntry[]
+
+  @@unique([companyId, publicCode])
+  @@unique([companyId, parentId, name])
+  @@index([companyId, kind, deactivatedAt])
+}
+
+model FinancialAccount {
+  id             String      @id @default(uuid()) @db.Uuid
+  companyId      String      @db.Uuid
+  publicCode     String
+  name           String
+  institution    String
+  type           AccountType
+  openingBalance Decimal     @default(0) @db.Decimal(18, 2)
+  deactivatedAt  DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  company        Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  settlements    Settlement[]
+
+  @@unique([companyId, publicCode])
+  @@index([companyId, deactivatedAt])
+}
+
+model Project {
+  id            String        @id @default(uuid()) @db.Uuid
+  companyId     String        @db.Uuid
+  publicCode    String
+  clientId      String?       @db.Uuid
+  name          String
+  startsOn      DateTime      @db.Date
+  endsOn        DateTime?     @db.Date
+  status        ProjectStatus @default(IN_PROGRESS)
+  deactivatedAt DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  company       Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  client        Counterparty? @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  entries       FinancialEntry[]
+
+  @@unique([companyId, publicCode])
+  @@index([companyId, status, deactivatedAt])
+}
+
+model FinancialEntry {
+  id             String          @id @default(uuid()) @db.Uuid
+  companyId      String          @db.Uuid
+  publicCode     String
+  counterpartyId String          @db.Uuid
+  categoryId     String          @db.Uuid
+  projectId      String?         @db.Uuid
+  createdById    String          @db.Uuid
+  kind           EntryKind
+  plan           PaymentPlan
+  description    String
+  totalAmount    Decimal         @db.Decimal(18, 2)
+  notes          String?
+  canceledAt     DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  counterparty   Counterparty    @relation(fields: [counterpartyId], references: [id], onDelete: Restrict)
+  category       Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  project        Project?        @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  createdBy      User            @relation("EntryCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  installments   FinancialInstallment[]
+  recurrence     RecurrenceRule?
+
+  @@unique([companyId, publicCode])
+  @@index([companyId, kind, canceledAt])
+  @@index([counterpartyId])
+  @@index([categoryId])
+}
+
+model FinancialInstallment {
+  id         String            @id @default(uuid()) @db.Uuid
+  entryId    String            @db.Uuid
+  sequence   Int
+  dueDate    DateTime          @db.Date
+  amount     Decimal           @db.Decimal(18, 2)
+  status     InstallmentStatus @default(PENDING)
+  canceledAt DateTime?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  entry      FinancialEntry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  settlement Settlement?
+
+  @@unique([entryId, sequence])
+  @@unique([entryId, dueDate])
+  @@index([dueDate, status])
+}
+
+model RecurrenceRule {
+  id             String         @id @default(uuid()) @db.Uuid
+  entryId        String         @unique @db.Uuid
+  intervalMonths Int            @default(1)
+  startsOn       DateTime       @db.Date
+  endsOn         DateTime?      @db.Date
+  generatedUntil DateTime       @db.Date
+  entry          FinancialEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+}
+
+model Settlement {
+  id            String               @id @default(uuid()) @db.Uuid
+  installmentId String               @unique @db.Uuid
+  accountId     String               @db.Uuid
+  settledById   String               @db.Uuid
+  amount        Decimal              @db.Decimal(18, 2)
+  settledAt     DateTime
+  notes         String?
+  createdAt     DateTime             @default(now())
+  installment   FinancialInstallment @relation(fields: [installmentId], references: [id], onDelete: Restrict)
+  account       FinancialAccount     @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  settledBy     User                 @relation(fields: [settledById], references: [id], onDelete: Restrict)
+
+  @@index([accountId, settledAt])
+}
+
+model Notification {
+  id        String           @id @default(uuid()) @db.Uuid
+  companyId String           @db.Uuid
+  userId    String?          @db.Uuid
+  type      NotificationType
+  title     String
+  message   String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+  company   Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, userId, readAt, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  companyId  String   @db.Uuid
+  actorId    String?  @db.Uuid
+  action     String
+  entityType String
+  entityId   String
+  summary    String
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, createdAt])
+  @@index([entityType, entityId])
+}
+
+model SequenceCounter {
+  companyId String  @db.Uuid
+  entity    String
+  value     Int     @default(0)
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([companyId, entity])
+}
