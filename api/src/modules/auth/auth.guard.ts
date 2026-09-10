@@ -1,10 +1,16 @@
-import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { Reflector } from '@nestjs/core';
-import type { Request } from 'express';
-import { IS_PUBLIC_KEY } from '../../common/public.decorator.js';
-import { PrismaService } from '../../database/prisma.service.js';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { Reflector } from "@nestjs/core";
+import type { Request } from "express";
+import { IS_PUBLIC_KEY } from "../../common/public.decorator.js";
+import { PrismaService } from "../../database/prisma.service.js";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,15 +22,27 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    if (this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()])) return true;
-    const request = context.switchToHttp().getRequest<Request & { user?: unknown }>();
+    if (
+      this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ])
+    )
+      return true;
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: unknown }>();
     const token = request.cookies?.vc_access as string | undefined;
-    if (!token) throw new UnauthorizedException('Sessão não encontrada');
+    if (!token) throw new UnauthorizedException("Sessão não encontrada");
     try {
-      const payload = await this.jwt.verifyAsync<{ sub: string }>(token, { secret: this.config.getOrThrow('AUTH_ACCESS_SECRET') });
+      const payload = await this.jwt.verifyAsync<{ sub: string }>(token, {
+        secret: this.config.getOrThrow("AUTH_ACCESS_SECRET"),
+      });
       const user = await this.prisma.user.findFirst({
-        where: { id: payload.sub, status: 'ACTIVE', deactivatedAt: null },
-        include: { role: { include: { permissions: { include: { permission: true } } } } },
+        where: { id: payload.sub, status: "ACTIVE", deactivatedAt: null },
+        include: {
+          role: { include: { permissions: { include: { permission: true } } } },
+        },
       });
       if (!user) throw new UnauthorizedException();
       request.user = {
@@ -36,7 +54,7 @@ export class AuthGuard implements CanActivate {
       };
       return true;
     } catch {
-      throw new UnauthorizedException('Sessão expirada');
+      throw new UnauthorizedException("Sessão expirada");
     }
   }
 }

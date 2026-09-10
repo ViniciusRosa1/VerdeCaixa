@@ -29,6 +29,20 @@
         ]
       }
     },
+    "/api/v1/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "responses": {
+          "429": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/refresh": {
       "post": {
         "operationId": "AuthController_refresh",
@@ -455,6 +469,18 @@
         "parameters": [],
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "settlements"
+        ]
+      },
+      "delete": {
+        "operationId": "SettlementsController_reverse",
+        "parameters": [],
+        "responses": {
+          "200": {
             "description": ""
           }
         },

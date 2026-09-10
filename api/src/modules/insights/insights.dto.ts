@@ -1,4 +1,4 @@
-import { IsDateString, IsIn, IsOptional } from 'class-validator';
+import { IsDateString, IsIn, IsOptional } from "class-validator";
 
 export class PeriodQueryDto {
   @IsOptional() @IsDateString() from?: string;
@@ -6,5 +6,5 @@ export class PeriodQueryDto {
 }
 
 export class ExportQueryDto extends PeriodQueryDto {
-  @IsIn(['pdf', 'csv']) format!: 'pdf' | 'csv';
+  @IsIn(["pdf", "csv"]) format!: "pdf" | "csv";
 }

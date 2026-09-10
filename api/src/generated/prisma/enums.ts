@@ -36,8 +36,11 @@ export type CategoryKind = (typeof CategoryKind)[keyof typeof CategoryKind]
 
 
 export const AccountType = {
-  BANK: 'BANK',
-  CASH: 'CASH'
+  CONTA_CORRENTE: 'CONTA_CORRENTE',
+  CONTA_POUPANCA: 'CONTA_POUPANCA',
+  CONTA_SALARIO: 'CONTA_SALARIO',
+  CONTA_PAGAMENTO: 'CONTA_PAGAMENTO',
+  CONTA_PJ: 'CONTA_PJ'
 } as const
 
 export type AccountType = (typeof AccountType)[keyof typeof AccountType]

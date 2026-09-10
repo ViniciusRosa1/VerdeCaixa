@@ -25,8 +25,11 @@ enum CategoryKind {
 }
 
 enum AccountType {
-  BANK
-  CASH
+  CONTA_CORRENTE
+  CONTA_POUPANCA
+  CONTA_SALARIO
+  CONTA_PAGAMENTO
+  CONTA_PJ
 }
 
 enum ProjectStatus {

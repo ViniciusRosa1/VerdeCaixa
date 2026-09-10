@@ -1,6 +1,19 @@
-import { Type } from 'class-transformer';
-import { IsDateString, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
-import { AccountType, CategoryKind, ProjectStatus } from '../../generated/prisma/enums.js';
+import { Type } from "class-transformer";
+import {
+  IsDateString,
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from "class-validator";
+import {
+  AccountType,
+  CategoryKind,
+  ProjectStatus,
+} from "../../generated/prisma/enums.js";
 
 export class CounterpartyDto {
   @IsString() name!: string;
@@ -19,7 +32,10 @@ export class AccountDto {
   @IsString() name!: string;
   @IsString() institution!: string;
   @IsEnum(AccountType) type!: AccountType;
-  @Type(() => Number) @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) openingBalance!: number;
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  openingBalance!: number;
 }
 
 export class ProjectDto {

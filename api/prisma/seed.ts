@@ -58,8 +58,8 @@ async function main() {
   for (const [publicCode, name, kind] of categoryRows) await prisma.category.upsert({ where: { companyId_publicCode: { companyId: company.id, publicCode } }, update: {}, create: { companyId: company.id, publicCode, name, kind } });
   const categories = await prisma.category.findMany({ where: { companyId: company.id } });
 
-  for (const [publicCode, name, institution, openingBalance] of [['CON-001', 'Conta principal', 'Banco Vereda', 84290.55], ['CON-002', 'Conta de recebimentos', 'Banco Horizonte', 28140.20], ['CON-003', 'Caixa pequeno', 'Interno', 1580]] as const) {
-    await prisma.financialAccount.upsert({ where: { companyId_publicCode: { companyId: company.id, publicCode } }, update: {}, create: { companyId: company.id, publicCode, name, institution, type: institution === 'Interno' ? 'CASH' : 'BANK', openingBalance } });
+  for (const [publicCode, name, institution, type, openingBalance] of [['CON-001', 'Conta principal', 'Banco Vereda', 'CONTA_CORRENTE', 84290.55], ['CON-002', 'Conta de recebimentos', 'Banco Horizonte', 'CONTA_PAGAMENTO', 28140.20], ['CON-003', 'Caixa pequeno', 'Interno', 'CONTA_PAGAMENTO', 1580]] as const) {
+    await prisma.financialAccount.upsert({ where: { companyId_publicCode: { companyId: company.id, publicCode } }, update: { type }, create: { companyId: company.id, publicCode, name, institution, type, openingBalance } });
   }
   const project = await prisma.project.upsert({ where: { companyId_publicCode: { companyId: company.id, publicCode: 'PRJ-001' } }, update: {}, create: { companyId: company.id, publicCode: 'PRJ-001', name: 'Expansão 2026', clientId: clients[0]!.id, startsOn: new Date('2026-01-01T00:00:00Z'), endsOn: new Date('2026-12-31T00:00:00Z') } });
 

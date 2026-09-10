@@ -1,5 +1,13 @@
-import { IsArray, IsEmail, IsEnum, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
-import { UserStatus } from '../../generated/prisma/enums.js';
+import {
+  IsArray,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MinLength,
+} from "class-validator";
+import { UserStatus } from "../../generated/prisma/enums.js";
 
 export class RoleDto {
   @IsString() name!: string;
