@@ -2,8 +2,9 @@
 /* oxlint-disable typescript/unbound-method */
 
 import * as Dialog from "@radix-ui/react-dialog";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Bell,
@@ -147,34 +148,8 @@ const titles: Record<string, { title: string; subtitle: string }> = {
 
 function UserMenu() {
   const { user, logout } = useAuth();
-  const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState("");
-  const container = useRef<HTMLDivElement>(null);
-  const trigger = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (event: PointerEvent) => {
-      if (
-        event.target instanceof Node &&
-        !container.current?.contains(event.target)
-      )
-        setOpen(false);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        trigger.current?.focus();
-      }
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
 
   const signOut = async () => {
     setSigningOut(true);
@@ -188,23 +163,8 @@ function UserMenu() {
     }
   };
 
-  return (
-    <div
-      ref={container}
-      className="relative"
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
-      }}
-    >
-      <button
-        ref={trigger}
-        type="button"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        aria-controls="user-account-panel"
-        aria-label="Abrir menu do usuário"
-        className="flex h-10 items-center gap-2 rounded-xl border border-[#DCE6D6] bg-white p-1.5 pr-2 text-left"
-      >
+  return <DropdownMenu.Root>
+    <DropdownMenu.Trigger asChild><button type="button" aria-label="Abrir menu do usuário" className="flex h-10 items-center gap-2 rounded-xl border border-border bg-white p-1.5 pr-2 text-left">
         <span className="grid size-7 place-items-center rounded-lg bg-[#DCE6D6] text-xs font-bold text-[#3E5A3C]">
           {user?.name
             ?.trim()
@@ -214,12 +174,8 @@ function UserMenu() {
             .join("") || "VC"}
         </span>
         <ChevronDown className="hidden size-3.5 text-[#60705E] sm:block" />
-      </button>
-      {open && (
-        <div
-          id="user-account-panel"
-          className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-[#DCE6D6] bg-white p-2 text-sm shadow-lg"
-        >
+      </button></DropdownMenu.Trigger>
+      <DropdownMenu.Portal><DropdownMenu.Content sideOffset={8} align="end" className="z-50 w-64 rounded-xl border border-border bg-white p-2 text-sm shadow-lg">
           <div className="border-b border-[#DCE6D6] px-3 py-2">
             <p className="truncate font-semibold text-[#1F2A1E]">
               {user?.name}
@@ -228,7 +184,6 @@ function UserMenu() {
           </div>
           <Link
             href="/configuracoes"
-            onClick={() => setOpen(false)}
             className="mt-1 block rounded-lg px-3 py-2 text-[#1F2A1E] hover:bg-[#F6FAF3]"
           >
             Configurações
@@ -246,20 +201,13 @@ function UserMenu() {
               {error}
             </p>
           )}
-        </div>
-      )}
-    </div>
-  );
+      </DropdownMenu.Content></DropdownMenu.Portal>
+    </DropdownMenu.Root>;
 }
 
-export function AppShell({
-  path,
-  children,
-}: {
-  path: string[];
-  children: React.ReactNode;
-}) {
+export function AppShell({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
+  const path = usePathname().split("/").filter(Boolean);
   const section = path[0] || "dashboard";
   const isForm =
     path.includes("novo") || path.includes("nova") || path.includes("editar");
@@ -313,7 +261,7 @@ export function AppShell({
                 {user?.company?.name ?? "Verde Caixa"}
               </span>
               <span className="block text-[11px] text-[#60705E]">
-                {user?.role ?? "Empresa ativa"}
+                {typeof user?.role === "string" ? user.role : user?.role?.name ?? "Empresa ativa"}
               </span>
             </span>
             <Link

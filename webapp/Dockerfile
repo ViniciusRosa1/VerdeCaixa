@@ -7,7 +7,12 @@ ARG NEXT_PUBLIC_API_BASE_URL=/api/v1
 ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 RUN npm run build
 
-FROM nginx:1.29-alpine
-COPY --from=build /app/out /usr/share/nginx/html
-COPY infra/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+FROM node:24.15.0-bookworm-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+EXPOSE 3000
+CMD ["node", "server.js"]

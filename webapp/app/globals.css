@@ -1,22 +1,48 @@
 @import "tailwindcss";
 
+:root {
+  --color-ink: #1f2a1e;
+  --color-brand-dark: #30482f;
+  --color-brand: #3e5a3c;
+  --color-accent: #8aae6d;
+  --color-page: #f6faf3;
+  --color-surface: #f2f7ee;
+  --color-border: #dce6d6;
+  --color-muted: #60705e;
+  --color-danger: #a14e42;
+  --color-success: #356333;
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-brand: var(--color-brand);
+  --color-accent: var(--color-accent);
+  --color-page: var(--color-page);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-muted: var(--color-muted);
+  --color-danger: var(--color-danger);
+  --color-success: var(--color-success);
+}
+
 @layer base {
   body {
     margin: 0;
-    background: #f6faf3;
-    color: #1f2a1e;
+    background: var(--color-page);
+    color: var(--color-ink);
     font-family: Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
   button:not(:disabled), summary { cursor: pointer; }
   button:disabled { cursor: not-allowed; }
-  :focus-visible { outline: 2px solid #3e5a3c; outline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--color-brand); outline-offset: 3px; }
 }
 
 @layer components {
   .app-card {
-    border: 1px solid #dce6d6;
+    border: 1px solid var(--color-border);
     border-radius: 1rem;
     background: white;
     box-shadow: 0 2px 8px rgb(31 42 30 / 3%);

@@ -1,6 +1,6 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
+import * as Dialog from '@radix-ui/react-alert-dialog';
 import { useState, type ReactElement } from 'react';
 
 export function ConfirmDialog({ title, description, trigger, onConfirm, destructive = false, confirmLabel = 'Confirmar' }: {
@@ -38,8 +38,8 @@ export function ConfirmDialog({ title, description, trigger, onConfirm, destruct
         <Dialog.Description className="mt-2 text-sm text-[#60705E]">{description}</Dialog.Description>
         {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
         <div className="mt-6 flex justify-end gap-3">
-          <Dialog.Close asChild><button disabled={pending} className="rounded-xl border border-[#DCE6D6] px-4 py-2 text-sm">Cancelar</button></Dialog.Close>
-          <button disabled={pending} onClick={() => void confirm()} className={`rounded-xl px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 ${destructive ? 'bg-red-700' : 'bg-[#3E5A3C]'}`}>{pending ? 'Confirmando…' : confirmLabel}</button>
+          <Dialog.Cancel asChild><button disabled={pending} className="rounded-xl border border-[#DCE6D6] px-4 py-2 text-sm">Cancelar</button></Dialog.Cancel>
+          <Dialog.Action asChild><button disabled={pending} onClick={(event) => { event.preventDefault(); void confirm(); }} className={`rounded-xl px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 ${destructive ? 'bg-red-700' : 'bg-[#3E5A3C]'}`}>{pending ? 'Confirmando…' : confirmLabel}</button></Dialog.Action>
         </div>
       </Dialog.Content>
     </Dialog.Portal>

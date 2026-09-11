@@ -19,9 +19,20 @@ export interface ApiUser {
   name: string;
   email: string;
   roleId: string;
-  role: string;
+  status: "ACTIVE" | "INACTIVE" | "PENDING";
+  role: ApiRole | string;
   company?: ApiCompany;
 }
+export interface ApiRole {
+  id: string;
+  publicCode: string;
+  name: string;
+  description?: string;
+  isSystem: boolean;
+  permissions: string[];
+  users: number;
+}
+export interface ApiPermission { id?: string; code: string; description: string }
 export interface ApiCompany {
   id: string;
   name: string;
@@ -69,6 +80,7 @@ export interface ApiProject {
   id: string;
   publicCode: string;
   name: string;
+  clientId?: string;
   client?: ApiCounterparty;
   startsOn: string;
   endsOn?: string;

@@ -115,49 +115,11 @@ export function useSaveEntry(id?: string | null) {
   });
 }
 
-export function useDirectory(kind: string) {
-  const paths: Record<string, string> = {
-    clientes: "/clients",
-    fornecedores: "/suppliers",
-    categorias: "/categories",
-    "contas-financeiras": "/financial-accounts",
-    projetos: "/projects",
-    equipe: "/users",
-    perfis: "/roles",
-  };
-  return useQuery({
-    queryKey: ["directory", kind],
-    queryFn: () => api<Page<Record<string, any>>>(`${paths[kind]}?limit=100`),
-  });
-}
-
-export function useSaveDirectory(kind: string, id?: string | null) {
+export function useCancelEntry() {
   const query = useQueryClient();
-  const paths: Record<string, string> = {
-    clientes: "/clients",
-    fornecedores: "/suppliers",
-    categorias: "/categories",
-    "contas-financeiras": "/financial-accounts",
-    projetos: "/projects",
-    equipe: "/users/invitations",
-    perfis: "/roles",
-  };
   return useMutation({
-    mutationFn: (body: Record<string, unknown>) => {
-      const path =
-        kind === "equipe" && id
-          ? `/users/${id}`
-          : `${paths[kind]}${id ? `/${id}` : ""}`;
-      return api(path, {
-        method: id ? "PATCH" : "POST",
-        body: JSON.stringify(body),
-      });
-    },
-    onSuccess: async () => {
-      await query.invalidateQueries({ queryKey: ["directory", kind] });
-      if (kind === "categorias") {
-        await query.invalidateQueries({ queryKey: ["categories"] });
-      }
-    },
+    mutationFn: (id: string) =>
+      api(`/financial-entries/${id}`, { method: "DELETE" }),
+    onSuccess: () => query.invalidateQueries({ queryKey: ["entries"] }),
   });
 }

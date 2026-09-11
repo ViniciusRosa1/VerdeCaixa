@@ -144,6 +144,7 @@ interface Notification {
   readAt?: string;
   type: string;
 }
+
 export function NotificationsPage() {
   const qc = useQueryClient();
   const result = useQuery({

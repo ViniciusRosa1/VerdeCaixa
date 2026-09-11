@@ -1,6 +1,6 @@
 # Verde Caixa
 
-O Verde Caixa é composto por um front-end Next.js estático e uma API NestJS com PostgreSQL e Prisma.
+O Verde Caixa é composto por um front-end Next.js executado em modo standalone e uma API NestJS com PostgreSQL e Prisma.
 
 ## Desenvolvimento
 
