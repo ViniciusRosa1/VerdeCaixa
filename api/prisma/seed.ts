@@ -30,12 +30,12 @@ async function main() {
   const allPermissions = await prisma.permission.findMany();
   const adminRole = await prisma.role.upsert({
     where: { companyId_name: { companyId: company.id, name: 'Administrador' } },
-    update: {},
+    update: { permissions: { createMany: { data: allPermissions.map((item) => ({ permissionId: item.id })), skipDuplicates: true } } },
     create: { companyId: company.id, publicCode: 'ROL-001', name: 'Administrador', description: 'Acesso total', isSystem: true, permissions: { create: allPermissions.map((item) => ({ permissionId: item.id })) } },
   });
   const viewCodes = ['company.view', 'entries.view', 'directories.view', 'projects.view', 'reports.view'];
   const viewPermissions = allPermissions.filter((item) => viewCodes.includes(item.code));
-  await prisma.role.upsert({ where: { companyId_name: { companyId: company.id, name: 'Consulta' } }, update: {}, create: { companyId: company.id, publicCode: 'ROL-003', name: 'Consulta', description: 'Somente visualização', permissions: { create: viewPermissions.map((item) => ({ permissionId: item.id })) } } });
+  await prisma.role.upsert({ where: { companyId_name: { companyId: company.id, name: 'Consulta' } }, update: { permissions: { createMany: { data: viewPermissions.map((item) => ({ permissionId: item.id })), skipDuplicates: true } } }, create: { companyId: company.id, publicCode: 'ROL-003', name: 'Consulta', description: 'Somente visualização', permissions: { create: viewPermissions.map((item) => ({ permissionId: item.id })) } } });
   const admin = await prisma.user.upsert({
     where: { email: (process.env.ADMIN_EMAIL ?? 'admin@verdecaixa.local').toLowerCase() },
     update: { passwordHash: await argon2.hash(configuredAdminPassword, { type: argon2.argon2id }) },
