@@ -32,6 +32,9 @@ export class ClientsController {
   @Get() list(@CurrentUser() u: AuthUser, @Query() q: ListQueryDto) {
     return this.service.listCounterparties(u.companyId, "CLIENT", q);
   }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.getCounterparty(u.companyId, id, "CLIENT");
+  }
   @Post() @RequirePermissions("directories.manage") create(
     @CurrentUser() u: AuthUser,
     @Body() d: CounterpartyDto,
@@ -60,6 +63,9 @@ export class SuppliersController {
   constructor(@Inject(DirectoryService) readonly service: DirectoryService) {}
   @Get() list(@CurrentUser() u: AuthUser, @Query() q: ListQueryDto) {
     return this.service.listCounterparties(u.companyId, "SUPPLIER", q);
+  }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.getCounterparty(u.companyId, id, "SUPPLIER");
   }
   @Post() @RequirePermissions("directories.manage") create(
     @CurrentUser() u: AuthUser,
@@ -92,6 +98,9 @@ export class CategoriesController {
   @Get() list(@CurrentUser() u: AuthUser, @Query() q: ListQueryDto) {
     return this.service.listCategories(u.companyId, q);
   }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.getCategory(u.companyId, id);
+  }
   @Post() @RequirePermissions("directories.manage") create(
     @CurrentUser() u: AuthUser,
     @Body() d: CategoryDto,
@@ -123,6 +132,9 @@ export class AccountsController {
   @Get() list(@CurrentUser() u: AuthUser, @Query() q: ListQueryDto) {
     return this.service.listAccounts(u.companyId, q);
   }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.getAccount(u.companyId, id);
+  }
   @Post() @RequirePermissions("directories.manage") create(
     @CurrentUser() u: AuthUser,
     @Body() d: AccountDto,
@@ -153,6 +165,9 @@ export class ProjectsController {
   ) {}
   @Get() list(@CurrentUser() u: AuthUser, @Query() q: ListQueryDto) {
     return this.service.listProjects(u.companyId, q);
+  }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.getProject(u.companyId, id);
   }
   @Post() @RequirePermissions("projects.manage") create(
     @CurrentUser() u: AuthUser,

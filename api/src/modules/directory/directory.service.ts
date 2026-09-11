@@ -18,6 +18,14 @@ export class DirectoryService {
     @Inject(SequenceService) private readonly sequences: SequenceService,
   ) {}
 
+  async getCounterparty(companyId: string, id: string, kind: CounterpartyKind) {
+    const row = await this.prisma.counterparty.findFirst({
+      where: { id, companyId, kind: { in: [kind, "BOTH"] } },
+    });
+    if (!row) throw new NotFoundException("Registro não encontrado");
+    return row;
+  }
+
   async listCounterparties(
     companyId: string,
     kind: CounterpartyKind,
@@ -103,14 +111,21 @@ export class DirectoryService {
     return paginated(data, total, query);
   }
 
+  async getCategory(companyId: string, id: string) {
+    const row = await this.prisma.category.findFirst({
+      where: { id, companyId },
+      include: { children: { where: { deactivatedAt: null } }, parent: true },
+    });
+    if (!row) throw new NotFoundException("Categoria não encontrada");
+    return row;
+  }
+
   createCategory(companyId: string, dto: CategoryDto) {
-    return this.sequences
-      .next(companyId, "CATEGORY")
-      .then((publicCode) =>
-        this.prisma.category.create({
-          data: { companyId, publicCode, ...dto },
-        }),
-      );
+    return this.sequences.next(companyId, "CATEGORY").then((publicCode) =>
+      this.prisma.category.create({
+        data: { companyId, publicCode, ...dto },
+      }),
+    );
   }
 
   async updateCategory(
@@ -167,14 +182,37 @@ export class DirectoryService {
     return paginated(data, total, query);
   }
 
+  async getAccount(companyId: string, id: string) {
+    const account = await this.prisma.financialAccount.findFirst({
+      where: { id, companyId },
+      include: {
+        settlements: { include: { installment: { include: { entry: true } } } },
+      },
+    });
+    if (!account)
+      throw new NotFoundException("Conta financeira não encontrada");
+    const { settlements, ...data } = account;
+    return {
+      ...data,
+      openingBalance: account.openingBalance.toString(),
+      balance: settlements
+        .reduce(
+          (sum, item) =>
+            sum +
+            Number(item.amount) *
+              (item.installment.entry.kind === "INCOME" ? 1 : -1),
+          Number(account.openingBalance),
+        )
+        .toFixed(2),
+    };
+  }
+
   createAccount(companyId: string, dto: AccountDto) {
-    return this.sequences
-      .next(companyId, "ACCOUNT")
-      .then((publicCode) =>
-        this.prisma.financialAccount.create({
-          data: { companyId, publicCode, ...dto },
-        }),
-      );
+    return this.sequences.next(companyId, "ACCOUNT").then((publicCode) =>
+      this.prisma.financialAccount.create({
+        data: { companyId, publicCode, ...dto },
+      }),
+    );
   }
   async updateAccount(companyId: string, id: string, dto: Partial<AccountDto>) {
     await this.ensure("financialAccount", companyId, id);
@@ -228,20 +266,46 @@ export class DirectoryService {
     return paginated(data, total, query);
   }
 
+  async getProject(companyId: string, id: string) {
+    const project = await this.prisma.project.findFirst({
+      where: { id, companyId },
+      include: {
+        client: true,
+        entries: {
+          include: { installments: { include: { settlement: true } } },
+        },
+      },
+    });
+    if (!project) throw new NotFoundException("Projeto não encontrado");
+    const { entries, ...data } = project;
+    return {
+      ...data,
+      result: entries
+        .flatMap((entry) =>
+          entry.installments.map((installment) =>
+            installment.settlement
+              ? Number(installment.settlement.amount) *
+                (entry.kind === "INCOME" ? 1 : -1)
+              : 0,
+          ),
+        )
+        .reduce((a, b) => a + b, 0)
+        .toFixed(2),
+    };
+  }
+
   createProject(companyId: string, dto: ProjectDto) {
-    return this.sequences
-      .next(companyId, "PROJECT")
-      .then((publicCode) =>
-        this.prisma.project.create({
-          data: {
-            companyId,
-            publicCode,
-            ...dto,
-            startsOn: new Date(dto.startsOn),
-            endsOn: dto.endsOn ? new Date(dto.endsOn) : undefined,
-          },
-        }),
-      );
+    return this.sequences.next(companyId, "PROJECT").then((publicCode) =>
+      this.prisma.project.create({
+        data: {
+          companyId,
+          publicCode,
+          ...dto,
+          startsOn: new Date(dto.startsOn),
+          endsOn: dto.endsOn ? new Date(dto.endsOn) : undefined,
+        },
+      }),
+    );
   }
   async updateProject(companyId: string, id: string, dto: Partial<ProjectDto>) {
     await this.ensure("project", companyId, id);

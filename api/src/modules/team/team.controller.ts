@@ -33,6 +33,9 @@ export class UsersController {
   @Get() list(@CurrentUser() u: AuthUser, @Query() q: ListQueryDto) {
     return this.service.users(u.companyId, q);
   }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.user(u.companyId, id);
+  }
   @Post("invitations") @RequirePermissions("team.manage") invite(
     @CurrentUser() u: AuthUser,
     @Body() d: InviteUserDto,
@@ -61,6 +64,9 @@ export class RolesController {
   }
   @Get("permissions") permissions() {
     return this.service.permissions();
+  }
+  @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
+    return this.service.role(u.companyId, id);
   }
   @Post() @RequirePermissions("roles.manage") create(
     @CurrentUser() u: AuthUser,

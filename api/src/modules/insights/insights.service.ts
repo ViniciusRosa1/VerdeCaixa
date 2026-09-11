@@ -211,7 +211,7 @@ export class InsightsService {
       margin: income
         ? Number((((income - expense) / income) * 100).toFixed(1))
         : 0,
-      cashFlow: await this.cashFlow(companyId),
+      cashFlow: await this.cashFlow(companyId, query),
     };
   }
 
@@ -263,45 +263,61 @@ export class InsightsService {
     return { contentType: "application/pdf", extension: "pdf", data };
   }
 
-  private async cashFlow(companyId: string) {
-    const result = [];
+  private async cashFlow(companyId: string, query: PeriodQueryDto = {}) {
     const now = new Date();
-    for (let index = 5; index >= 0; index -= 1) {
-      const from = new Date(
-        Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - index, 1),
+    const filtered = Boolean(query.from && query.to);
+    const from = filtered
+      ? new Date(`${query.from}T00:00:00Z`)
+      : new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 5, 1));
+    const to = filtered
+      ? new Date(`${query.to}T23:59:59Z`)
+      : new Date(
+          Date.UTC(
+            now.getUTCFullYear(),
+            now.getUTCMonth() + 1,
+            0,
+            23,
+            59,
+            59,
+          ),
+        );
+    const daily =
+      from.getUTCFullYear() === to.getUTCFullYear() &&
+      from.getUTCMonth() === to.getUTCMonth();
+    const settlements = await this.prisma.settlement.findMany({
+      where: {
+        settledAt: { gte: from, lte: to },
+        installment: { entry: { companyId, canceledAt: null } },
+      },
+      include: { installment: { include: { entry: true } } },
+    });
+    const result: Array<{ month: string; income: string; expense: string }> = [];
+    let cursor = daily
+      ? new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate()))
+      : new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), 1));
+    const last = daily
+      ? new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), to.getUTCDate()))
+      : new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), 1));
+    while (cursor <= last) {
+      const bucketStart = new Date(cursor);
+      const bucketEnd = daily
+        ? new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth(), cursor.getUTCDate(), 23, 59, 59))
+        : new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 1, 0, 23, 59, 59));
+      const rows = settlements.filter(
+        (item) => item.settledAt >= bucketStart && item.settledAt <= bucketEnd,
       );
-      const to = new Date(
-        Date.UTC(
-          now.getUTCFullYear(),
-          now.getUTCMonth() - index + 1,
-          0,
-          23,
-          59,
-          59,
-        ),
-      );
-      const settlements = await this.prisma.settlement.findMany({
-        where: {
-          settledAt: { gte: from, lte: to },
-          installment: { entry: { companyId } },
-        },
-        include: { installment: { include: { entry: true } } },
-      });
       result.push({
-        month: from
-          .toLocaleString("pt-BR", { month: "short", timeZone: "UTC" })
-          .replace(".", ""),
-        income: money(
-          settlements
-            .filter((item) => item.installment.entry.kind === "INCOME")
-            .reduce((sum, item) => sum + Number(item.amount), 0),
-        ),
-        expense: money(
-          settlements
-            .filter((item) => item.installment.entry.kind === "EXPENSE")
-            .reduce((sum, item) => sum + Number(item.amount), 0),
-        ),
+        month: daily
+          ? String(cursor.getUTCDate()).padStart(2, "0")
+          : cursor
+              .toLocaleString("pt-BR", { month: "short", year: "2-digit", timeZone: "UTC" })
+              .replace(".", ""),
+        income: money(rows.filter((item) => item.installment.entry.kind === "INCOME").reduce((sum, item) => sum + Number(item.amount), 0)),
+        expense: money(rows.filter((item) => item.installment.entry.kind === "EXPENSE").reduce((sum, item) => sum + Number(item.amount), 0)),
       });
+      cursor = daily
+        ? new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth(), cursor.getUTCDate() + 1))
+        : new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 1, 1));
     }
     return result;
   }

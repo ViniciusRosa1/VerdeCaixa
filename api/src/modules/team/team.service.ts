@@ -75,6 +75,16 @@ export class TeamService {
     );
   }
 
+  async user(companyId: string, id: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { id, companyId },
+      include: { role: true },
+    });
+    if (!user) throw new NotFoundException("Usuário não encontrado");
+    const { passwordHash: _, ...safeUser } = user;
+    return safeUser;
+  }
+
   async updateUser(companyId: string, id: string, dto: UpdateUserDto) {
     const user = await this.prisma.user.findFirst({ where: { id, companyId } });
     if (!user) throw new NotFoundException("Usuário não encontrado");
@@ -200,6 +210,22 @@ export class TeamService {
       total,
       query,
     );
+  }
+
+  async role(companyId: string, id: string) {
+    const role = await this.prisma.role.findFirst({
+      where: { id, companyId, deactivatedAt: null },
+      include: {
+        permissions: { include: { permission: true } },
+        _count: { select: { users: true } },
+      },
+    });
+    if (!role) throw new NotFoundException("Papel não encontrado");
+    return {
+      ...role,
+      permissions: role.permissions.map((item) => item.permission.code),
+      users: role._count.users,
+    };
   }
 
   permissions() {

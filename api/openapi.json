@@ -166,6 +166,18 @@
       }
     },
     "/api/v1/clients/{id}": {
+      "get": {
+        "operationId": "ClientsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "clients"
+        ]
+      },
       "patch": {
         "operationId": "ClientsController_update",
         "parameters": [],
@@ -218,6 +230,18 @@
       }
     },
     "/api/v1/suppliers/{id}": {
+      "get": {
+        "operationId": "SuppliersController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "suppliers"
+        ]
+      },
       "patch": {
         "operationId": "SuppliersController_update",
         "parameters": [],
@@ -270,6 +294,18 @@
       }
     },
     "/api/v1/categories/{id}": {
+      "get": {
+        "operationId": "CategoriesController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "categories"
+        ]
+      },
       "patch": {
         "operationId": "CategoriesController_update",
         "parameters": [],
@@ -322,6 +358,18 @@
       }
     },
     "/api/v1/financial-accounts/{id}": {
+      "get": {
+        "operationId": "AccountsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "financial-accounts"
+        ]
+      },
       "patch": {
         "operationId": "AccountsController_update",
         "parameters": [],
@@ -374,6 +422,18 @@
       }
     },
     "/api/v1/projects/{id}": {
+      "get": {
+        "operationId": "ProjectsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "projects"
+        ]
+      },
       "patch": {
         "operationId": "ProjectsController_update",
         "parameters": [],
@@ -573,12 +633,24 @@
         ]
       }
     },
-    "/api/v1/users/invitations": {
-      "post": {
-        "operationId": "UsersController_invite",
+    "/api/v1/users/{id}": {
+      "get": {
+        "operationId": "UsersController_get",
         "parameters": [],
         "responses": {
-          "201": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "parameters": [],
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -587,12 +659,12 @@
         ]
       }
     },
-    "/api/v1/users/{id}": {
-      "patch": {
-        "operationId": "UsersController_update",
+    "/api/v1/users/invitations": {
+      "post": {
+        "operationId": "UsersController_invite",
         "parameters": [],
         "responses": {
-          "200": {
+          "201": {
             "description": ""
           }
         },
@@ -656,6 +728,18 @@
       }
     },
     "/api/v1/roles/{id}": {
+      "get": {
+        "operationId": "RolesController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "roles"
+        ]
+      },
       "patch": {
         "operationId": "RolesController_update",
         "parameters": [],

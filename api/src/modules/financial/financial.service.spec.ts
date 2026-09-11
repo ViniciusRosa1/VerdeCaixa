@@ -74,4 +74,26 @@ describe("FinancialService", () => {
     expect(transaction).toHaveBeenCalledOnce();
     expect(auditCreate).toHaveBeenCalledOnce();
   });
+
+  it("impede excluir um lançamento depois de liquidado", async () => {
+    const update = vi.fn();
+    const prisma = {
+      financialEntry: {
+        findFirst: vi.fn().mockResolvedValue({
+          id: "entry-id",
+          publicCode: "REC-0001",
+          installments: [{ status: "SETTLED" }],
+        }),
+        update,
+      },
+    };
+    const cancelService = new FinancialService(prisma as never, {} as never);
+    await expect(
+      cancelService.cancel(
+        { id: "user-id", companyId: "company-id" } as never,
+        "entry-id",
+      ),
+    ).rejects.toMatchObject({ status: 400 });
+    expect(update).not.toHaveBeenCalled();
+  });
 });
