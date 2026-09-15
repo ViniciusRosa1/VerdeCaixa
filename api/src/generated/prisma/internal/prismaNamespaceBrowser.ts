@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Company: 'Company',
   User: 'User',
+  CompanyMembership: 'CompanyMembership',
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
@@ -107,12 +108,11 @@ export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeo
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
-  roleId: 'roleId',
   name: 'name',
   email: 'email',
   passwordHash: 'passwordHash',
   status: 'status',
+  mustChangePassword: 'mustChangePassword',
   lastLoginAt: 'lastLoginAt',
   deactivatedAt: 'deactivatedAt',
   createdAt: 'createdAt',
@@ -120,6 +120,21 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CompanyMembershipScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  userId: 'userId',
+  roleId: 'roleId',
+  status: 'status',
+  activatedAt: 'activatedAt',
+  deactivatedAt: 'deactivatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyMembershipScalarFieldEnum = (typeof CompanyMembershipScalarFieldEnum)[keyof typeof CompanyMembershipScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {
@@ -157,6 +172,7 @@ export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnu
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  activeMembershipId: 'activeMembershipId',
   refreshTokenHash: 'refreshTokenHash',
   userAgent: 'userAgent',
   ipAddress: 'ipAddress',
@@ -184,6 +200,7 @@ export const UserInvitationScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   roleId: 'roleId',
+  membershipId: 'membershipId',
   email: 'email',
   name: 'name',
   tokenHash: 'tokenHash',

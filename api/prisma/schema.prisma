@@ -74,7 +74,7 @@ model Company {
   reminderDaysBefore Int                @default(3)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
-  users              User[]
+  memberships        CompanyMembership[]
   roles              Role[]
   counterparties     Counterparty[]
   categories         Category[]
@@ -89,26 +89,44 @@ model Company {
 
 model User {
   id                  String               @id @default(uuid()) @db.Uuid
-  companyId           String               @db.Uuid
-  roleId              String               @db.Uuid
   name                String
   email               String               @unique
   passwordHash        String
   status              UserStatus           @default(ACTIVE)
+  mustChangePassword  Boolean              @default(false)
   lastLoginAt         DateTime?
   deactivatedAt       DateTime?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
-  company             Company              @relation(fields: [companyId], references: [id], onDelete: Restrict)
-  role                Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  memberships         CompanyMembership[]
   sessions            Session[]
   passwordResetTokens PasswordResetToken[]
   notifications       Notification[]
   auditLogs           AuditLog[]
   settlements         Settlement[]
   createdEntries      FinancialEntry[]     @relation("EntryCreator")
+  @@index([status])
+}
 
+model CompanyMembership {
+  id            String         @id @default(uuid()) @db.Uuid
+  companyId     String         @db.Uuid
+  userId        String         @db.Uuid
+  roleId        String         @db.Uuid
+  status        UserStatus     @default(ACTIVE)
+  activatedAt   DateTime?
+  deactivatedAt DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          Role           @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  sessions      Session[]
+  invitation    UserInvitation?
+
+  @@unique([companyId, userId])
   @@index([companyId, status])
+  @@index([userId, status])
 }
 
 model Role {
@@ -122,7 +140,7 @@ model Role {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   company     Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  users       User[]
+  memberships CompanyMembership[]
   permissions RolePermission[]
   invitations UserInvitation[]
 
@@ -149,6 +167,7 @@ model RolePermission {
 model Session {
   id               String    @id @default(uuid()) @db.Uuid
   userId           String    @db.Uuid
+  activeMembershipId String? @db.Uuid
   refreshTokenHash String
   userAgent        String?
   ipAddress        String?
@@ -156,8 +175,10 @@ model Session {
   revokedAt        DateTime?
   createdAt        DateTime  @default(now())
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeMembership CompanyMembership? @relation(fields: [activeMembershipId], references: [id], onDelete: SetNull)
 
   @@index([userId, expiresAt])
+  @@index([activeMembershipId])
 }
 
 model PasswordResetToken {
@@ -176,6 +197,7 @@ model UserInvitation {
   id        String    @id @default(uuid()) @db.Uuid
   companyId String    @db.Uuid
   roleId    String    @db.Uuid
+  membershipId String? @unique @db.Uuid
   email     String
   name      String?
   tokenHash String    @unique
@@ -184,6 +206,7 @@ model UserInvitation {
   createdAt DateTime  @default(now())
   company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   role      Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  membership CompanyMembership? @relation(fields: [membershipId], references: [id], onDelete: Cascade)
 
   @@index([companyId, email])
 }

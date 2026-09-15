@@ -15,7 +15,6 @@ import {
   type AuthUser,
 } from "../../common/current-user.decorator.js";
 import { ListQueryDto } from "../../common/dto.js";
-import { Public } from "../../common/public.decorator.js";
 import { RequirePermissions } from "../auth/permissions.decorator.js";
 import {
   AcceptInvitationDto,
@@ -49,8 +48,17 @@ export class UsersController {
   ) {
     return this.service.updateUser(u.companyId, id, d);
   }
-  @Public() @Post("invitations/accept") accept(@Body() d: AcceptInvitationDto) {
-    return this.service.accept(d);
+  @Post("invitations/accept") @RequirePermissions() accept(
+    @CurrentUser() u: AuthUser,
+    @Body() d: AcceptInvitationDto,
+  ) {
+    return this.service.accept(u.id, u.email, u.sessionId, d);
+  }
+  @Post("invitations/:id/resend") @RequirePermissions("team.manage") resend(
+    @CurrentUser() u: AuthUser,
+    @Param("id") id: string,
+  ) {
+    return this.service.resend(u.companyId, id);
   }
 }
 

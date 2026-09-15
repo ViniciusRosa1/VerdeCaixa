@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Company: 'Company',
   User: 'User',
+  CompanyMembership: 'CompanyMembership',
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
@@ -431,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "company" | "user" | "role" | "permission" | "rolePermission" | "session" | "passwordResetToken" | "userInvitation" | "counterparty" | "category" | "financialAccount" | "project" | "financialEntry" | "financialInstallment" | "recurrenceRule" | "settlement" | "notification" | "auditLog" | "sequenceCounter"
+    modelProps: "company" | "user" | "companyMembership" | "role" | "permission" | "rolePermission" | "session" | "passwordResetToken" | "userInvitation" | "counterparty" | "category" | "financialAccount" | "project" | "financialEntry" | "financialInstallment" | "recurrenceRule" | "settlement" | "notification" | "auditLog" | "sequenceCounter"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -580,6 +581,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    CompanyMembership: {
+      payload: Prisma.$CompanyMembershipPayload<ExtArgs>
+      fields: Prisma.CompanyMembershipFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompanyMembershipFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompanyMembershipFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>
+        }
+        findFirst: {
+          args: Prisma.CompanyMembershipFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompanyMembershipFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>
+        }
+        findMany: {
+          args: Prisma.CompanyMembershipFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>[]
+        }
+        create: {
+          args: Prisma.CompanyMembershipCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>
+        }
+        createMany: {
+          args: Prisma.CompanyMembershipCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompanyMembershipCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>[]
+        }
+        delete: {
+          args: Prisma.CompanyMembershipDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>
+        }
+        update: {
+          args: Prisma.CompanyMembershipUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompanyMembershipDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompanyMembershipUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompanyMembershipUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompanyMembershipUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompanyMembershipPayload>
+        }
+        aggregate: {
+          args: Prisma.CompanyMembershipAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompanyMembership>
+        }
+        groupBy: {
+          args: Prisma.CompanyMembershipGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyMembershipGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompanyMembershipCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompanyMembershipCountAggregateOutputType> | number
         }
       }
     }
@@ -1899,12 +1974,11 @@ export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeo
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  companyId: 'companyId',
-  roleId: 'roleId',
   name: 'name',
   email: 'email',
   passwordHash: 'passwordHash',
   status: 'status',
+  mustChangePassword: 'mustChangePassword',
   lastLoginAt: 'lastLoginAt',
   deactivatedAt: 'deactivatedAt',
   createdAt: 'createdAt',
@@ -1912,6 +1986,21 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const CompanyMembershipScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  userId: 'userId',
+  roleId: 'roleId',
+  status: 'status',
+  activatedAt: 'activatedAt',
+  deactivatedAt: 'deactivatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CompanyMembershipScalarFieldEnum = (typeof CompanyMembershipScalarFieldEnum)[keyof typeof CompanyMembershipScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {
@@ -1949,6 +2038,7 @@ export type RolePermissionScalarFieldEnum = (typeof RolePermissionScalarFieldEnu
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  activeMembershipId: 'activeMembershipId',
   refreshTokenHash: 'refreshTokenHash',
   userAgent: 'userAgent',
   ipAddress: 'ipAddress',
@@ -1976,6 +2066,7 @@ export const UserInvitationScalarFieldEnum = {
   id: 'id',
   companyId: 'companyId',
   roleId: 'roleId',
+  membershipId: 'membershipId',
   email: 'email',
   name: 'name',
   tokenHash: 'tokenHash',
@@ -2570,6 +2661,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   company?: Prisma.CompanyOmit
   user?: Prisma.UserOmit
+  companyMembership?: Prisma.CompanyMembershipOmit
   role?: Prisma.RoleOmit
   permission?: Prisma.PermissionOmit
   rolePermission?: Prisma.RolePermissionOmit

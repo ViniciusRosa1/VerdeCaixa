@@ -264,7 +264,7 @@ export type CompanyWhereInput = {
   reminderDaysBefore?: Prisma.IntFilter<"Company"> | number
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
-  users?: Prisma.UserListRelationFilter
+  memberships?: Prisma.CompanyMembershipListRelationFilter
   roles?: Prisma.RoleListRelationFilter
   counterparties?: Prisma.CounterpartyListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
@@ -289,7 +289,7 @@ export type CompanyOrderByWithRelationInput = {
   reminderDaysBefore?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  users?: Prisma.UserOrderByRelationAggregateInput
+  memberships?: Prisma.CompanyMembershipOrderByRelationAggregateInput
   roles?: Prisma.RoleOrderByRelationAggregateInput
   counterparties?: Prisma.CounterpartyOrderByRelationAggregateInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
@@ -317,7 +317,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   reminderDaysBefore?: Prisma.IntFilter<"Company"> | number
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string
-  users?: Prisma.UserListRelationFilter
+  memberships?: Prisma.CompanyMembershipListRelationFilter
   roles?: Prisma.RoleListRelationFilter
   counterparties?: Prisma.CounterpartyListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
@@ -378,7 +378,7 @@ export type CompanyCreateInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -403,7 +403,7 @@ export type CompanyUncheckedCreateInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -428,7 +428,7 @@ export type CompanyUpdateInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -453,7 +453,7 @@ export type CompanyUncheckedUpdateInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -587,18 +587,18 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
-export type CompanyCreateNestedOneWithoutUsersInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutUsersInput, Prisma.CompanyUncheckedCreateWithoutUsersInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutUsersInput
+export type CompanyCreateNestedOneWithoutMembershipsInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutMembershipsInput, Prisma.CompanyUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutMembershipsInput
   connect?: Prisma.CompanyWhereUniqueInput
 }
 
-export type CompanyUpdateOneRequiredWithoutUsersNestedInput = {
-  create?: Prisma.XOR<Prisma.CompanyCreateWithoutUsersInput, Prisma.CompanyUncheckedCreateWithoutUsersInput>
-  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutUsersInput
-  upsert?: Prisma.CompanyUpsertWithoutUsersInput
+export type CompanyUpdateOneRequiredWithoutMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompanyCreateWithoutMembershipsInput, Prisma.CompanyUncheckedCreateWithoutMembershipsInput>
+  connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutMembershipsInput
+  upsert?: Prisma.CompanyUpsertWithoutMembershipsInput
   connect?: Prisma.CompanyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutUsersInput, Prisma.CompanyUpdateWithoutUsersInput>, Prisma.CompanyUncheckedUpdateWithoutUsersInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutMembershipsInput, Prisma.CompanyUpdateWithoutMembershipsInput>, Prisma.CompanyUncheckedUpdateWithoutMembershipsInput>
 }
 
 export type CompanyCreateNestedOneWithoutRolesInput = {
@@ -741,7 +741,7 @@ export type CompanyUpdateOneRequiredWithoutSequencesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutSequencesInput, Prisma.CompanyUpdateWithoutSequencesInput>, Prisma.CompanyUncheckedUpdateWithoutSequencesInput>
 }
 
-export type CompanyCreateWithoutUsersInput = {
+export type CompanyCreateWithoutMembershipsInput = {
   id?: string
   name: string
   document?: string | null
@@ -765,7 +765,7 @@ export type CompanyCreateWithoutUsersInput = {
   invitations?: Prisma.UserInvitationCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyUncheckedCreateWithoutUsersInput = {
+export type CompanyUncheckedCreateWithoutMembershipsInput = {
   id?: string
   name: string
   document?: string | null
@@ -789,23 +789,23 @@ export type CompanyUncheckedCreateWithoutUsersInput = {
   invitations?: Prisma.UserInvitationUncheckedCreateNestedManyWithoutCompanyInput
 }
 
-export type CompanyCreateOrConnectWithoutUsersInput = {
+export type CompanyCreateOrConnectWithoutMembershipsInput = {
   where: Prisma.CompanyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutUsersInput, Prisma.CompanyUncheckedCreateWithoutUsersInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutMembershipsInput, Prisma.CompanyUncheckedCreateWithoutMembershipsInput>
 }
 
-export type CompanyUpsertWithoutUsersInput = {
-  update: Prisma.XOR<Prisma.CompanyUpdateWithoutUsersInput, Prisma.CompanyUncheckedUpdateWithoutUsersInput>
-  create: Prisma.XOR<Prisma.CompanyCreateWithoutUsersInput, Prisma.CompanyUncheckedCreateWithoutUsersInput>
+export type CompanyUpsertWithoutMembershipsInput = {
+  update: Prisma.XOR<Prisma.CompanyUpdateWithoutMembershipsInput, Prisma.CompanyUncheckedUpdateWithoutMembershipsInput>
+  create: Prisma.XOR<Prisma.CompanyCreateWithoutMembershipsInput, Prisma.CompanyUncheckedCreateWithoutMembershipsInput>
   where?: Prisma.CompanyWhereInput
 }
 
-export type CompanyUpdateToOneWithWhereWithoutUsersInput = {
+export type CompanyUpdateToOneWithWhereWithoutMembershipsInput = {
   where?: Prisma.CompanyWhereInput
-  data: Prisma.XOR<Prisma.CompanyUpdateWithoutUsersInput, Prisma.CompanyUncheckedUpdateWithoutUsersInput>
+  data: Prisma.XOR<Prisma.CompanyUpdateWithoutMembershipsInput, Prisma.CompanyUncheckedUpdateWithoutMembershipsInput>
 }
 
-export type CompanyUpdateWithoutUsersInput = {
+export type CompanyUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -829,7 +829,7 @@ export type CompanyUpdateWithoutUsersInput = {
   invitations?: Prisma.UserInvitationUpdateManyWithoutCompanyNestedInput
 }
 
-export type CompanyUncheckedUpdateWithoutUsersInput = {
+export type CompanyUncheckedUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   document?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -865,7 +865,7 @@ export type CompanyCreateWithoutRolesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
   accounts?: Prisma.FinancialAccountCreateNestedManyWithoutCompanyInput
@@ -889,7 +889,7 @@ export type CompanyUncheckedCreateWithoutRolesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
   accounts?: Prisma.FinancialAccountUncheckedCreateNestedManyWithoutCompanyInput
@@ -929,7 +929,7 @@ export type CompanyUpdateWithoutRolesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
   accounts?: Prisma.FinancialAccountUpdateManyWithoutCompanyNestedInput
@@ -953,7 +953,7 @@ export type CompanyUncheckedUpdateWithoutRolesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
   accounts?: Prisma.FinancialAccountUncheckedUpdateManyWithoutCompanyNestedInput
@@ -977,7 +977,7 @@ export type CompanyCreateWithoutInvitationsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1001,7 +1001,7 @@ export type CompanyUncheckedCreateWithoutInvitationsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1041,7 +1041,7 @@ export type CompanyUpdateWithoutInvitationsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1065,7 +1065,7 @@ export type CompanyUncheckedUpdateWithoutInvitationsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1089,7 +1089,7 @@ export type CompanyCreateWithoutCounterpartiesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
   accounts?: Prisma.FinancialAccountCreateNestedManyWithoutCompanyInput
@@ -1113,7 +1113,7 @@ export type CompanyUncheckedCreateWithoutCounterpartiesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
   accounts?: Prisma.FinancialAccountUncheckedCreateNestedManyWithoutCompanyInput
@@ -1153,7 +1153,7 @@ export type CompanyUpdateWithoutCounterpartiesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
   accounts?: Prisma.FinancialAccountUpdateManyWithoutCompanyNestedInput
@@ -1177,7 +1177,7 @@ export type CompanyUncheckedUpdateWithoutCounterpartiesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
   accounts?: Prisma.FinancialAccountUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1201,7 +1201,7 @@ export type CompanyCreateWithoutCategoriesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   accounts?: Prisma.FinancialAccountCreateNestedManyWithoutCompanyInput
@@ -1225,7 +1225,7 @@ export type CompanyUncheckedCreateWithoutCategoriesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   accounts?: Prisma.FinancialAccountUncheckedCreateNestedManyWithoutCompanyInput
@@ -1265,7 +1265,7 @@ export type CompanyUpdateWithoutCategoriesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   accounts?: Prisma.FinancialAccountUpdateManyWithoutCompanyNestedInput
@@ -1289,7 +1289,7 @@ export type CompanyUncheckedUpdateWithoutCategoriesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   accounts?: Prisma.FinancialAccountUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1313,7 +1313,7 @@ export type CompanyCreateWithoutAccountsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1337,7 +1337,7 @@ export type CompanyUncheckedCreateWithoutAccountsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1377,7 +1377,7 @@ export type CompanyUpdateWithoutAccountsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1401,7 +1401,7 @@ export type CompanyUncheckedUpdateWithoutAccountsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1425,7 +1425,7 @@ export type CompanyCreateWithoutProjectsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1449,7 +1449,7 @@ export type CompanyUncheckedCreateWithoutProjectsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1489,7 +1489,7 @@ export type CompanyUpdateWithoutProjectsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1513,7 +1513,7 @@ export type CompanyUncheckedUpdateWithoutProjectsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1537,7 +1537,7 @@ export type CompanyCreateWithoutEntriesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1561,7 +1561,7 @@ export type CompanyUncheckedCreateWithoutEntriesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1601,7 +1601,7 @@ export type CompanyUpdateWithoutEntriesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1625,7 +1625,7 @@ export type CompanyUncheckedUpdateWithoutEntriesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1649,7 +1649,7 @@ export type CompanyCreateWithoutNotificationsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1673,7 +1673,7 @@ export type CompanyUncheckedCreateWithoutNotificationsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1713,7 +1713,7 @@ export type CompanyUpdateWithoutNotificationsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1737,7 +1737,7 @@ export type CompanyUncheckedUpdateWithoutNotificationsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1761,7 +1761,7 @@ export type CompanyCreateWithoutAuditLogsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1785,7 +1785,7 @@ export type CompanyUncheckedCreateWithoutAuditLogsInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1825,7 +1825,7 @@ export type CompanyUpdateWithoutAuditLogsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1849,7 +1849,7 @@ export type CompanyUncheckedUpdateWithoutAuditLogsInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1873,7 +1873,7 @@ export type CompanyCreateWithoutSequencesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryCreateNestedManyWithoutCompanyInput
@@ -1897,7 +1897,7 @@ export type CompanyUncheckedCreateWithoutSequencesInput = {
   reminderDaysBefore?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput
+  memberships?: Prisma.CompanyMembershipUncheckedCreateNestedManyWithoutCompanyInput
   roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput
   counterparties?: Prisma.CounterpartyUncheckedCreateNestedManyWithoutCompanyInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutCompanyInput
@@ -1937,7 +1937,7 @@ export type CompanyUpdateWithoutSequencesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutCompanyNestedInput
@@ -1961,7 +1961,7 @@ export type CompanyUncheckedUpdateWithoutSequencesInput = {
   reminderDaysBefore?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutCompanyNestedInput
+  memberships?: Prisma.CompanyMembershipUncheckedUpdateManyWithoutCompanyNestedInput
   roles?: Prisma.RoleUncheckedUpdateManyWithoutCompanyNestedInput
   counterparties?: Prisma.CounterpartyUncheckedUpdateManyWithoutCompanyNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutCompanyNestedInput
@@ -1979,7 +1979,7 @@ export type CompanyUncheckedUpdateWithoutSequencesInput = {
  */
 
 export type CompanyCountOutputType = {
-  users: number
+  memberships: number
   roles: number
   counterparties: number
   categories: number
@@ -1993,7 +1993,7 @@ export type CompanyCountOutputType = {
 }
 
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  users?: boolean | CompanyCountOutputTypeCountUsersArgs
+  memberships?: boolean | CompanyCountOutputTypeCountMembershipsArgs
   roles?: boolean | CompanyCountOutputTypeCountRolesArgs
   counterparties?: boolean | CompanyCountOutputTypeCountCounterpartiesArgs
   categories?: boolean | CompanyCountOutputTypeCountCategoriesArgs
@@ -2019,8 +2019,8 @@ export type CompanyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * CompanyCountOutputType without action
  */
-export type CompanyCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.UserWhereInput
+export type CompanyCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompanyMembershipWhereInput
 }
 
 /**
@@ -2106,7 +2106,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   reminderDaysBefore?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  users?: boolean | Prisma.Company$usersArgs<ExtArgs>
+  memberships?: boolean | Prisma.Company$membershipsArgs<ExtArgs>
   roles?: boolean | Prisma.Company$rolesArgs<ExtArgs>
   counterparties?: boolean | Prisma.Company$counterpartiesArgs<ExtArgs>
   categories?: boolean | Prisma.Company$categoriesArgs<ExtArgs>
@@ -2164,7 +2164,7 @@ export type CompanySelectScalar = {
 
 export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "document" | "financialEmail" | "currency" | "timezone" | "logoUrl" | "reminderEnabled" | "reminderDaysBefore" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  users?: boolean | Prisma.Company$usersArgs<ExtArgs>
+  memberships?: boolean | Prisma.Company$membershipsArgs<ExtArgs>
   roles?: boolean | Prisma.Company$rolesArgs<ExtArgs>
   counterparties?: boolean | Prisma.Company$counterpartiesArgs<ExtArgs>
   categories?: boolean | Prisma.Company$categoriesArgs<ExtArgs>
@@ -2183,7 +2183,7 @@ export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Company"
   objects: {
-    users: Prisma.$UserPayload<ExtArgs>[]
+    memberships: Prisma.$CompanyMembershipPayload<ExtArgs>[]
     roles: Prisma.$RolePayload<ExtArgs>[]
     counterparties: Prisma.$CounterpartyPayload<ExtArgs>[]
     categories: Prisma.$CategoryPayload<ExtArgs>[]
@@ -2601,7 +2601,7 @@ readonly fields: CompanyFieldRefs;
  */
 export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  users<T extends Prisma.Company$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  memberships<T extends Prisma.Company$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   roles<T extends Prisma.Company$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   counterparties<T extends Prisma.Company$counterpartiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$counterpartiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CounterpartyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   categories<T extends Prisma.Company$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3045,27 +3045,27 @@ export type CompanyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Company.users
+ * Company.memberships
  */
-export type Company$usersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Company$membershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the CompanyMembership
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.CompanyMembershipSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the CompanyMembership
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.CompanyMembershipOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
-  cursor?: Prisma.UserWhereUniqueInput
+  include?: Prisma.CompanyMembershipInclude<ExtArgs> | null
+  where?: Prisma.CompanyMembershipWhereInput
+  orderBy?: Prisma.CompanyMembershipOrderByWithRelationInput | Prisma.CompanyMembershipOrderByWithRelationInput[]
+  cursor?: Prisma.CompanyMembershipWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+  distinct?: Prisma.CompanyMembershipScalarFieldEnum | Prisma.CompanyMembershipScalarFieldEnum[]
 }
 
 /**

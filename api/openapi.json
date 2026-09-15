@@ -85,6 +85,48 @@
         ]
       }
     },
+    "/api/v1/auth/companies": {
+      "get": {
+        "operationId": "AuthController_companies",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/select-company": {
+      "post": {
+        "operationId": "AuthController_selectCompany",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/change-initial-password": {
+      "post": {
+        "operationId": "AuthController_changeInitialPassword",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/forgot-password": {
       "post": {
         "operationId": "AuthController_forgot",
@@ -676,6 +718,20 @@
     "/api/v1/users/invitations/accept": {
       "post": {
         "operationId": "UsersController_accept",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api/v1/users/invitations/{id}/resend": {
+      "post": {
+        "operationId": "UsersController_resend",
         "parameters": [],
         "responses": {
           "201": {

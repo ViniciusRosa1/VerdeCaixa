@@ -8,7 +8,7 @@ import {
   type AuthUser,
 } from "../../common/current-user.decorator.js";
 import { Public } from "../../common/public.decorator.js";
-import { ForgotPasswordDto, LoginDto, RegisterDto, ResetPasswordDto } from "./auth.dto.js";
+import { ChangeInitialPasswordDto, ForgotPasswordDto, LoginDto, RegisterDto, ResetPasswordDto, SelectCompanyDto } from "./auth.dto.js";
 import { AuthService } from "./auth.service.js";
 
 @ApiTags("auth")
@@ -76,7 +76,30 @@ export class AuthController {
   }
 
   @Get("me") me(@CurrentUser() user: AuthUser) {
-    return this.auth.me(user.id);
+    return this.auth.me(user.id, user.sessionId);
+  }
+  @Get("companies") companies(@CurrentUser() user: AuthUser) {
+    return this.auth.companies(user.id);
+  }
+  @Post("select-company")
+  async selectCompany(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: SelectCompanyDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const result = await this.auth.selectCompany(user.id, user.sessionId, dto);
+    this.setSessionCookies(response, result.access, result.refresh);
+    return { user: result.user };
+  }
+  @Post("change-initial-password")
+  async changeInitialPassword(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: ChangeInitialPasswordDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const result = await this.auth.changeInitialPassword(user.id, user.sessionId, dto);
+    this.setSessionCookies(response, result.access, result.refresh);
+    return { user: result.user };
   }
   @Public() @Post("forgot-password") forgot(@Body() dto: ForgotPasswordDto) {
     return this.auth.forgotPassword(dto);

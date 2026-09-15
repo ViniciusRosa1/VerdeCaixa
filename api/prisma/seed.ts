@@ -39,7 +39,12 @@ async function main() {
   const admin = await prisma.user.upsert({
     where: { email: (process.env.ADMIN_EMAIL ?? 'admin@verdecaixa.local').toLowerCase() },
     update: { passwordHash: await argon2.hash(configuredAdminPassword, { type: argon2.argon2id }) },
-    create: { companyId: company.id, roleId: adminRole.id, name: process.env.ADMIN_NAME ?? 'Administrador', email: (process.env.ADMIN_EMAIL ?? 'admin@verdecaixa.local').toLowerCase(), passwordHash: await argon2.hash(configuredAdminPassword, { type: argon2.argon2id }) },
+    create: { name: process.env.ADMIN_NAME ?? 'Administrador', email: (process.env.ADMIN_EMAIL ?? 'admin@verdecaixa.local').toLowerCase(), passwordHash: await argon2.hash(configuredAdminPassword, { type: argon2.argon2id }) },
+  });
+  await prisma.companyMembership.upsert({
+    where: { companyId_userId: { companyId: company.id, userId: admin.id } },
+    update: { roleId: adminRole.id, status: 'ACTIVE', deactivatedAt: null },
+    create: { companyId: company.id, userId: admin.id, roleId: adminRole.id, status: 'ACTIVE', activatedAt: new Date() },
   });
 
   const counterparties = [

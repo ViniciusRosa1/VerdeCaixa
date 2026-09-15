@@ -12,7 +12,7 @@ export class AuditInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest<Request & { user?: AuthUser }>();
     const user = request.user;
     const route = request.path.replace(/^\/api\/v1\//, '').split('/')[0] ?? 'unknown';
-    const shouldAudit = user && !['GET', 'HEAD', 'OPTIONS'].includes(request.method) && !['financial-entries', 'financial-installments', 'notifications'].includes(route);
+    const shouldAudit = user?.membershipId && !request.path.endsWith('/users/invitations/accept') && !['GET', 'HEAD', 'OPTIONS'].includes(request.method) && !['financial-entries', 'financial-installments', 'notifications'].includes(route);
     if (!shouldAudit) return next.handle();
     return next.handle().pipe(mergeMap(async (result: unknown) => {
       const entityId = typeof result === 'object' && result && 'id' in result ? String((result as { id: unknown }).id) : String(request.params.id ?? user.id);

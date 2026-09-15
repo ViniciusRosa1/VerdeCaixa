@@ -5,8 +5,9 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  MinLength,
+  MaxLength,
 } from "class-validator";
+import { Transform } from "class-transformer";
 import { UserStatus } from "../../generated/prisma/enums.js";
 
 export class RoleDto {
@@ -16,8 +17,9 @@ export class RoleDto {
 }
 
 export class InviteUserDto {
-  @IsEmail() email!: string;
-  @IsOptional() @IsString() name?: string;
+  @Transform(({ value }) => typeof value === "string" ? value.trim().toLowerCase() : value)
+  @IsEmail() @MaxLength(254) email!: string;
+  @IsOptional() @IsString() @MaxLength(120) name?: string;
   @IsUUID() roleId!: string;
 }
 
@@ -29,6 +31,4 @@ export class UpdateUserDto {
 
 export class AcceptInvitationDto {
   @IsString() token!: string;
-  @IsString() name!: string;
-  @IsString() @MinLength(8) password!: string;
 }

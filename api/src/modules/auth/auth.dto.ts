@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, MinLength, MaxLength } from "class-validator";
+import { IsEmail, IsString, IsUUID, MinLength, MaxLength } from "class-validator";
 import { Transform } from "class-transformer";
 
 export class RegisterDto {
@@ -41,4 +41,18 @@ export class ForgotPasswordDto {
 export class ResetPasswordDto {
   @ApiProperty() @IsString() token!: string;
   @ApiProperty({ minLength: 8 }) @IsString() @MinLength(8) password!: string;
+}
+
+export class ChangeInitialPasswordDto {
+  @ApiProperty({ minLength: 8 })
+  @IsString()
+  @MinLength(8)
+  @MaxLength(128)
+  password!: string;
+}
+
+export class SelectCompanyDto {
+  @ApiProperty()
+  @IsUUID()
+  membershipId!: string;
 }

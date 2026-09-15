@@ -1,16 +1,19 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import type { Request } from "express";
 import { IS_PUBLIC_KEY } from "../../common/public.decorator.js";
 import { PrismaService } from "../../database/prisma.service.js";
+
+const identityRoutes = [
+  "/auth/me",
+  "/auth/logout",
+  "/auth/companies",
+  "/auth/select-company",
+  "/auth/change-initial-password",
+  "/users/invitations/accept",
+];
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,38 +25,44 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    if (
-      this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-        context.getHandler(),
-        context.getClass(),
-      ])
-    )
-      return true;
-    const request = context
-      .switchToHttp()
-      .getRequest<Request & { user?: unknown }>();
+    if (this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()])) return true;
+    const request = context.switchToHttp().getRequest<Request & { user?: unknown }>();
     const token = request.cookies?.vc_access as string | undefined;
     if (!token) throw new UnauthorizedException("Sessão não encontrada");
     try {
-      const payload = await this.jwt.verifyAsync<{ sub: string }>(token, {
+      const payload = await this.jwt.verifyAsync<{ sub: string; sid: string }>(token, {
         secret: this.config.getOrThrow("AUTH_ACCESS_SECRET"),
       });
-      const user = await this.prisma.user.findFirst({
-        where: { id: payload.sub, status: "ACTIVE", deactivatedAt: null },
+      const session = await this.prisma.session.findFirst({
+        where: { id: payload.sid, userId: payload.sub, revokedAt: null, expiresAt: { gt: new Date() } },
         include: {
-          role: { include: { permissions: { include: { permission: true } } } },
+          user: true,
+          activeMembership: { include: { role: { include: { permissions: { include: { permission: true } } } } } },
         },
       });
-      if (!user) throw new UnauthorizedException();
+      if (!session || session.user.status !== "ACTIVE" || session.user.deactivatedAt) throw new UnauthorizedException();
+      const membership = session.activeMembership?.status === "ACTIVE" && !session.activeMembership.deactivatedAt && !session.activeMembership.role.deactivatedAt
+        ? session.activeMembership
+        : undefined;
+      const identityOnly = identityRoutes.some((route) => request.path.endsWith(route));
+      if (session.user.mustChangePassword && !request.path.endsWith("/auth/change-initial-password") && !request.path.endsWith("/auth/me") && !request.path.endsWith("/auth/logout")) {
+        throw new ForbiddenException({ error: "PASSWORD_CHANGE_REQUIRED", message: "Troque sua senha temporária para continuar" });
+      }
+      if (!membership && !identityOnly) {
+        throw new ForbiddenException({ error: "COMPANY_SELECTION_REQUIRED", message: "Selecione uma empresa para continuar" });
+      }
       request.user = {
-        id: user.id,
-        companyId: user.companyId,
-        roleId: user.roleId,
-        email: user.email,
-        permissions: user.role.permissions.map((item) => item.permission.code),
+        id: session.user.id,
+        sessionId: session.id,
+        membershipId: membership?.id,
+        companyId: membership?.companyId ?? "",
+        roleId: membership?.roleId ?? "",
+        email: session.user.email,
+        permissions: membership?.role.permissions.map((item) => item.permission.code) ?? [],
       };
       return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof ForbiddenException) throw error;
       throw new UnauthorizedException("Sessão expirada");
     }
   }
