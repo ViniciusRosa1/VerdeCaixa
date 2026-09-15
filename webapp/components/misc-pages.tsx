@@ -35,6 +35,7 @@ export function LoginPage() {
       await login(
         typeof email === "string" ? email : "",
         typeof password === "string" ? password : "",
+        new URLSearchParams(window.location.search).get("next") ?? undefined,
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Não foi possível entrar.");

@@ -16,12 +16,24 @@ export interface Page<T> {
 }
 export interface ApiUser {
   id: string;
+  userId?: string;
   name: string;
   email: string;
   roleId: string;
   status: "ACTIVE" | "INACTIVE" | "PENDING";
   role: ApiRole | string;
+  membershipId?: string;
+  mustChangePassword?: boolean;
+  nextStep?: "CHANGE_PASSWORD" | "SELECT_COMPANY" | "READY";
+  companies?: ApiMembership[];
   company?: ApiCompany;
+}
+export interface ApiMembership {
+  id: string;
+  companyId: string;
+  company: ApiCompany;
+  roleId: string;
+  role: string;
 }
 export interface ApiRole {
   id: string;

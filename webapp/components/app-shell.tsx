@@ -205,8 +205,27 @@ function UserMenu() {
     </DropdownMenu.Root>;
 }
 
+function CompanyMenu() {
+  const { user, selectCompany } = useAuth();
+  const [busy, setBusy] = useState("");
+  const memberships = user?.companies ?? [];
+  const content = <span className="text-right">
+    <span className="block max-w-48 truncate text-xs font-semibold text-[#1F2A1E]">{user?.company?.name ?? "Verde Caixa"}</span>
+    <span className="block text-[11px] text-[#60705E]">{typeof user?.role === "string" ? user.role : user?.role?.name ?? "Empresa ativa"}</span>
+  </span>;
+  if (memberships.length < 2) return <span className="hidden md:block">{content}</span>;
+  return <DropdownMenu.Root>
+    <DropdownMenu.Trigger asChild><button type="button" className="hidden items-center gap-1 rounded-xl px-2 py-1 hover:bg-[#F6FAF3] md:flex" aria-label="Trocar empresa">{content}<ChevronDown className="size-3.5 text-[#60705E]" /></button></DropdownMenu.Trigger>
+    <DropdownMenu.Portal><DropdownMenu.Content sideOffset={8} align="end" className="z-50 w-72 rounded-xl border border-border bg-white p-2 text-sm shadow-lg">
+      <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-[#60705E]">Trocar empresa</DropdownMenu.Label>
+      {memberships.map((membership) => <DropdownMenu.Item key={membership.id} disabled={busy !== "" || membership.id === user?.membershipId} onSelect={() => { setBusy(membership.id); void selectCompany(membership.id).finally(() => setBusy("")); }} className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 outline-none hover:bg-[#F6FAF3] disabled:opacity-50">
+        <Building2 className="size-4 text-[#3E5A3C]" /><span className="min-w-0"><span className="block truncate font-medium">{membership.company.name}</span><span className="block truncate text-xs text-[#60705E]">{membership.role}</span></span>
+      </DropdownMenu.Item>)}
+    </DropdownMenu.Content></DropdownMenu.Portal>
+  </DropdownMenu.Root>;
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
   const path = usePathname().split("/").filter(Boolean);
   const section = path[0] || "dashboard";
   const isForm =
@@ -256,14 +275,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </p>
           </div>
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <span className="hidden text-right md:block">
-              <span className="block text-xs font-semibold text-[#1F2A1E]">
-                {user?.company?.name ?? "Verde Caixa"}
-              </span>
-              <span className="block text-[11px] text-[#60705E]">
-                {typeof user?.role === "string" ? user.role : user?.role?.name ?? "Empresa ativa"}
-              </span>
-            </span>
+            <CompanyMenu />
             <Link
               href="/notificacoes"
               className="relative grid size-10 place-items-center rounded-xl border border-[#DCE6D6] bg-white text-[#3E5A3C] hover:bg-[#F6FAF3]"

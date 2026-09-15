@@ -1,7 +1,7 @@
 "use client";
 
 import { StatusPill } from "@/components/shared-pages";
-import { useDeactivateUser, useUserList } from "@/lib/api/entity-hooks";
+import { useDeactivateUser, useResendUserInvitation, useUserList } from "@/lib/api/entity-hooks";
 import {
   DirectoryInitials,
   DirectoryListView,
@@ -12,6 +12,7 @@ import {
 export function EquipeList() {
   const query = useUserList();
   const remove = useDeactivateUser();
+  const resend = useResendUserInvitation();
   const rows = query.data?.data ?? [];
 
   return (
@@ -68,6 +69,7 @@ export function EquipeList() {
               id={row.id}
               title={row.name}
               editBase="/equipe"
+              onResend={row.status === "PENDING" || row.mustChangePassword ? (id) => resend.mutateAsync(id) : undefined}
               onDeactivate={(id) => remove.mutateAsync(id)}
             />
           ),

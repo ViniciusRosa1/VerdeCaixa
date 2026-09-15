@@ -63,8 +63,8 @@ export function Select({ name, defaultValue, value, onValueChange, placeholder =
   </SelectPrimitive.Root>;
 }
 
-export function SelectItem({ value, children }: { value: string; children: ReactNode }) {
-  return <SelectPrimitive.Item value={value} className="relative flex h-9 select-none items-center rounded-lg pl-8 pr-3 text-sm outline-none data-[highlighted]:bg-surface"><SelectPrimitive.ItemIndicator className="absolute left-2"><Check className="size-4" /></SelectPrimitive.ItemIndicator><SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText></SelectPrimitive.Item>;
+export function SelectItem({ value, children, disabled }: { value: string; children: ReactNode; disabled?: boolean }) {
+  return <SelectPrimitive.Item value={value} disabled={disabled} className="relative flex h-9 select-none items-center rounded-lg pl-8 pr-3 text-sm outline-none data-[disabled]:opacity-50 data-[highlighted]:bg-surface"><SelectPrimitive.ItemIndicator className="absolute left-2"><Check className="size-4" /></SelectPrimitive.ItemIndicator><SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText></SelectPrimitive.Item>;
 }
 
 export function Checkbox({ name, value, defaultChecked, label }: { name: string; value: string; defaultChecked?: boolean; label: string }) {

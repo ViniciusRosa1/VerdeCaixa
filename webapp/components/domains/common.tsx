@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { Pencil, Plus, Search, Send, Trash2 } from "lucide-react";
 import {
   type CSSProperties,
   useMemo,
@@ -171,14 +171,22 @@ export function DirectoryRowActions({
   title,
   editBase,
   onDeactivate,
+  onResend,
 }: {
   id: string;
   title: string;
   editBase: string;
   onDeactivate(id: string): Promise<unknown>;
+  onResend?: (id: string) => Promise<unknown>;
 }) {
   return (
     <div className="flex gap-1 sm:justify-end">
+      {onResend && <button
+        type="button"
+        onClick={() => void onResend(id)}
+        className="grid size-9 place-items-center rounded-lg border border-border text-brand"
+        aria-label={`Reenviar convite para ${title}`}
+      ><Send className="size-3.5" /></button>}
       <Link
         href={`${editBase}/${id}/editar`}
         className="grid size-9 place-items-center rounded-lg border border-border"

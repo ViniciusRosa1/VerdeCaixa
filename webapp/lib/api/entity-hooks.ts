@@ -124,6 +124,13 @@ export const useUser = (id?: string) => detail<ApiUser>("user", "/users", id);
 export const useSaveUser = (id?: string) =>
   save<UserInput>("users", "/users", id, "/users/invitations");
 export const useDeactivateUser = () => deactivate("users", "/users", "PATCH");
+export const useResendUserInvitation = () => {
+  const query = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api(`/users/invitations/${id}/resend`, { method: "POST" }),
+    onSuccess: () => query.invalidateQueries({ queryKey: ["users"] }),
+  });
+};
 
 export const useRoleList = () => list<ApiRole>("roles", "/roles");
 export const useRole = (id?: string) => detail<ApiRole>("role", "/roles", id);
