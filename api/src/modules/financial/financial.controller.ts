@@ -9,7 +9,7 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import {
   CurrentUser,
   type AuthUser,
@@ -36,13 +36,19 @@ export class FinancialController {
   @Get(":id") get(@CurrentUser() u: AuthUser, @Param("id") id: string) {
     return this.service.get(u.companyId, id);
   }
-  @Post() @RequirePermissions("entries.create") create(
+  @Post()
+  @ApiBody({ type: CreateFinancialEntryDto })
+  @RequirePermissions("entries.create")
+  create(
     @CurrentUser() u: AuthUser,
     @Body() d: CreateFinancialEntryDto,
   ) {
     return this.service.create(u, d);
   }
-  @Patch(":id") @RequirePermissions("entries.edit") update(
+  @Patch(":id")
+  @ApiBody({ type: UpdateFinancialEntryDto })
+  @RequirePermissions("entries.edit")
+  update(
     @CurrentUser() u: AuthUser,
     @Param("id") id: string,
     @Body() d: UpdateFinancialEntryDto,
@@ -63,7 +69,10 @@ export class SettlementsController {
   constructor(
     @Inject(FinancialService) private readonly service: FinancialService,
   ) {}
-  @Post(":id/settlements") @RequirePermissions("entries.settle") settle(
+  @Post(":id/settlements")
+  @ApiBody({ type: SettleDto })
+  @RequirePermissions("entries.settle")
+  settle(
     @CurrentUser() u: AuthUser,
     @Param("id") id: string,
     @Body() d: SettleDto,

@@ -21,4 +21,21 @@ describe("InsightsService cash flow", () => {
       where: expect.objectContaining({ installment: { entry: { companyId: "company-id", canceledAt: null } } }),
     }));
   });
+
+  it("restringe o fluxo financeiro à conta selecionada", async () => {
+    const findMany = vi.fn().mockResolvedValue([]);
+    const service = new InsightsService({ settlement: { findMany } } as never);
+
+    await (service as any).cashFlow("company-id", {
+      from: "2026-09-01",
+      to: "2026-09-02",
+      accountId: "account-id",
+    });
+
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ accountId: "account-id" }),
+      }),
+    );
+  });
 });

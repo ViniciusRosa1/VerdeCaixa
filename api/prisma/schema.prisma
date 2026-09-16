@@ -63,17 +63,17 @@ enum NotificationType {
 }
 
 model Company {
-  id                 String             @id @default(uuid()) @db.Uuid
+  id                 String              @id @default(uuid()) @db.Uuid
   name               String
-  document           String?            @unique
+  document           String?             @unique
   financialEmail     String?
-  currency           String             @default("BRL") @db.VarChar(3)
-  timezone           String             @default("America/Sao_Paulo")
-  logoUrl             String?
-  reminderEnabled    Boolean            @default(true)
-  reminderDaysBefore Int                @default(3)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  currency           String              @default("BRL") @db.VarChar(3)
+  timezone           String              @default("America/Sao_Paulo")
+  logoUrl            String?
+  reminderEnabled    Boolean             @default(true)
+  reminderDaysBefore Int                 @default(3)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   memberships        CompanyMembership[]
   roles              Role[]
   counterparties     Counterparty[]
@@ -82,8 +82,8 @@ model Company {
   projects           Project[]
   entries            FinancialEntry[]
   notifications      Notification[]
-  auditLogs           AuditLog[]
-  sequences           SequenceCounter[]
+  auditLogs          AuditLog[]
+  sequences          SequenceCounter[]
   invitations        UserInvitation[]
 }
 
@@ -105,22 +105,23 @@ model User {
   auditLogs           AuditLog[]
   settlements         Settlement[]
   createdEntries      FinancialEntry[]     @relation("EntryCreator")
+
   @@index([status])
 }
 
 model CompanyMembership {
-  id            String         @id @default(uuid()) @db.Uuid
-  companyId     String         @db.Uuid
-  userId        String         @db.Uuid
-  roleId        String         @db.Uuid
-  status        UserStatus     @default(ACTIVE)
+  id            String          @id @default(uuid()) @db.Uuid
+  companyId     String          @db.Uuid
+  userId        String          @db.Uuid
+  roleId        String          @db.Uuid
+  status        UserStatus      @default(ACTIVE)
   activatedAt   DateTime?
   deactivatedAt DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role          Role           @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  company       Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          Role            @relation(fields: [roleId], references: [id], onDelete: Restrict)
   sessions      Session[]
   invitation    UserInvitation?
 
@@ -130,19 +131,19 @@ model CompanyMembership {
 }
 
 model Role {
-  id          String           @id @default(uuid()) @db.Uuid
-  companyId   String           @db.Uuid
-  publicCode  String
-  name        String
-  description String?
-  isSystem    Boolean          @default(false)
+  id            String              @id @default(uuid()) @db.Uuid
+  companyId     String              @db.Uuid
+  publicCode    String
+  name          String
+  description   String?
+  isSystem      Boolean             @default(false)
   deactivatedAt DateTime?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  company     Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  memberships CompanyMembership[]
-  permissions RolePermission[]
-  invitations UserInvitation[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  company       Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  memberships   CompanyMembership[]
+  permissions   RolePermission[]
+  invitations   UserInvitation[]
 
   @@unique([companyId, publicCode])
   @@unique([companyId, name])
@@ -165,17 +166,17 @@ model RolePermission {
 }
 
 model Session {
-  id               String    @id @default(uuid()) @db.Uuid
-  userId           String    @db.Uuid
-  activeMembershipId String? @db.Uuid
-  refreshTokenHash String
-  userAgent        String?
-  ipAddress        String?
-  expiresAt        DateTime
-  revokedAt        DateTime?
-  createdAt        DateTime  @default(now())
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  activeMembership CompanyMembership? @relation(fields: [activeMembershipId], references: [id], onDelete: SetNull)
+  id                 String             @id @default(uuid()) @db.Uuid
+  userId             String             @db.Uuid
+  activeMembershipId String?            @db.Uuid
+  refreshTokenHash   String
+  userAgent          String?
+  ipAddress          String?
+  expiresAt          DateTime
+  revokedAt          DateTime?
+  createdAt          DateTime           @default(now())
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeMembership   CompanyMembership? @relation(fields: [activeMembershipId], references: [id], onDelete: SetNull)
 
   @@index([userId, expiresAt])
   @@index([activeMembershipId])
@@ -194,19 +195,19 @@ model PasswordResetToken {
 }
 
 model UserInvitation {
-  id        String    @id @default(uuid()) @db.Uuid
-  companyId String    @db.Uuid
-  roleId    String    @db.Uuid
-  membershipId String? @unique @db.Uuid
-  email     String
-  name      String?
-  tokenHash String    @unique
-  expiresAt DateTime
-  acceptedAt DateTime?
-  createdAt DateTime  @default(now())
-  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  role      Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  membership CompanyMembership? @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  id           String             @id @default(uuid()) @db.Uuid
+  companyId    String             @db.Uuid
+  roleId       String             @db.Uuid
+  membershipId String?            @unique @db.Uuid
+  email        String
+  name         String?
+  tokenHash    String             @unique
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  createdAt    DateTime           @default(now())
+  company      Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role         Role               @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  membership   CompanyMembership? @relation(fields: [membershipId], references: [id], onDelete: Cascade)
 
   @@index([companyId, email])
 }
@@ -233,18 +234,18 @@ model Counterparty {
 }
 
 model Category {
-  id            String       @id @default(uuid()) @db.Uuid
-  companyId     String       @db.Uuid
+  id            String           @id @default(uuid()) @db.Uuid
+  companyId     String           @db.Uuid
   publicCode    String
-  parentId      String?      @db.Uuid
+  parentId      String?          @db.Uuid
   name          String
   kind          CategoryKind
   deactivatedAt DateTime?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  company       Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  parent        Category?    @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
-  children      Category[]   @relation("CategoryTree")
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  parent        Category?        @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children      Category[]       @relation("CategoryTree")
   entries       FinancialEntry[]
 
   @@unique([companyId, publicCode])
@@ -253,17 +254,18 @@ model Category {
 }
 
 model FinancialAccount {
-  id             String      @id @default(uuid()) @db.Uuid
-  companyId      String      @db.Uuid
+  id             String           @id @default(uuid()) @db.Uuid
+  companyId      String           @db.Uuid
   publicCode     String
   name           String
   institution    String
   type           AccountType
-  openingBalance Decimal     @default(0) @db.Decimal(18, 2)
+  openingBalance Decimal          @default(0) @db.Decimal(18, 2)
   deactivatedAt  DateTime?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  company        Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  company        Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  entries        FinancialEntry[]
   settlements    Settlement[]
 
   @@unique([companyId, publicCode])
@@ -271,19 +273,19 @@ model FinancialAccount {
 }
 
 model Project {
-  id            String        @id @default(uuid()) @db.Uuid
-  companyId     String        @db.Uuid
+  id            String           @id @default(uuid()) @db.Uuid
+  companyId     String           @db.Uuid
   publicCode    String
-  clientId      String?       @db.Uuid
+  clientId      String?          @db.Uuid
   name          String
-  startsOn      DateTime      @db.Date
-  endsOn        DateTime?     @db.Date
-  status        ProjectStatus @default(IN_PROGRESS)
+  startsOn      DateTime         @db.Date
+  endsOn        DateTime?        @db.Date
+  status        ProjectStatus    @default(IN_PROGRESS)
   deactivatedAt DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  company       Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  client        Counterparty? @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  client        Counterparty?    @relation(fields: [clientId], references: [id], onDelete: Restrict)
   entries       FinancialEntry[]
 
   @@unique([companyId, publicCode])
@@ -291,26 +293,28 @@ model Project {
 }
 
 model FinancialEntry {
-  id             String          @id @default(uuid()) @db.Uuid
-  companyId      String          @db.Uuid
+  id             String                 @id @default(uuid()) @db.Uuid
+  companyId      String                 @db.Uuid
   publicCode     String
-  counterpartyId String          @db.Uuid
-  categoryId     String          @db.Uuid
-  projectId      String?         @db.Uuid
-  createdById    String          @db.Uuid
+  counterpartyId String                 @db.Uuid
+  categoryId     String                 @db.Uuid
+  projectId      String?                @db.Uuid
+  accountId      String?                @db.Uuid
+  createdById    String                 @db.Uuid
   kind           EntryKind
   plan           PaymentPlan
   description    String
-  totalAmount    Decimal         @db.Decimal(18, 2)
+  totalAmount    Decimal                @db.Decimal(18, 2)
   notes          String?
   canceledAt     DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  counterparty   Counterparty    @relation(fields: [counterpartyId], references: [id], onDelete: Restrict)
-  category       Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  project        Project?        @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  createdBy      User            @relation("EntryCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  company        Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  counterparty   Counterparty           @relation(fields: [counterpartyId], references: [id], onDelete: Restrict)
+  category       Category               @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  project        Project?               @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  account        FinancialAccount?      @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  createdBy      User                   @relation("EntryCreator", fields: [createdById], references: [id], onDelete: Restrict)
   installments   FinancialInstallment[]
   recurrence     RecurrenceRule?
 
@@ -318,6 +322,7 @@ model FinancialEntry {
   @@index([companyId, kind, canceledAt])
   @@index([counterpartyId])
   @@index([categoryId])
+  @@index([accountId])
 }
 
 model FinancialInstallment {

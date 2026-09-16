@@ -96,4 +96,62 @@ describe("FinancialService", () => {
     ).rejects.toMatchObject({ status: 400 });
     expect(update).not.toHaveBeenCalled();
   });
+
+  it("impede alterar dados financeiros depois de qualquer liquidação", async () => {
+    const update = vi.fn();
+    const prisma = {
+      financialEntry: {
+        findFirst: vi.fn().mockResolvedValue({
+          id: "entry-id",
+          kind: "EXPENSE",
+          totalAmount: "100.00",
+          counterpartyId: "counterparty-id",
+          categoryId: "category-id",
+          projectId: null,
+          accountId: "account-id",
+          installments: [{ status: "SETTLED" }],
+          recurrence: null,
+        }),
+        update,
+      },
+    };
+    const updateService = new FinancialService(prisma as never, {} as never);
+
+    await expect(
+      updateService.update(
+        { id: "user-id", companyId: "company-id" } as never,
+        "entry-id",
+        { totalAmount: 120 },
+      ),
+    ).rejects.toMatchObject({ status: 400 });
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it("rejeita liquidação em uma conta diferente da vinculada", async () => {
+    const accountFind = vi.fn();
+    const prisma = {
+      financialInstallment: {
+        findFirst: vi.fn().mockResolvedValue({
+          id: "installment-id",
+          entryId: "entry-id",
+          status: "PENDING",
+          entry: {
+            publicCode: "PAG-0001",
+            accountId: "planned-account-id",
+          },
+        }),
+      },
+      financialAccount: { findFirst: accountFind },
+    };
+    const settleService = new FinancialService(prisma as never, {} as never);
+
+    await expect(
+      settleService.settle(
+        { id: "user-id", companyId: "company-id" } as never,
+        "installment-id",
+        { accountId: "other-account-id" },
+      ),
+    ).rejects.toMatchObject({ status: 400 });
+    expect(accountFind).not.toHaveBeenCalled();
+  });
 });

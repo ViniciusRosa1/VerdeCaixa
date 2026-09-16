@@ -517,6 +517,16 @@
       "post": {
         "operationId": "FinancialController_create",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFinancialEntryDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -543,6 +553,16 @@
       "patch": {
         "operationId": "FinancialController_update",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFinancialEntryDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -569,6 +589,16 @@
       "post": {
         "operationId": "SettlementsController_settle",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettleDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -608,7 +638,16 @@
     "/api/v1/dashboard": {
       "get": {
         "operationId": "InsightsController_dashboard",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -636,7 +675,16 @@
     "/api/v1/reports/{report}": {
       "get": {
         "operationId": "InsightsController_report",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "accountId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -899,6 +947,130 @@
         "name": "x-csrf-token"
       }
     },
-    "schemas": {}
+    "schemas": {
+      "CreateFinancialEntryDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "INCOME",
+              "EXPENSE"
+            ]
+          },
+          "plan": {
+            "type": "string",
+            "enum": [
+              "CASH",
+              "INSTALLMENT",
+              "RECURRING"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "counterpartyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalAmount": {
+            "type": "number",
+            "minimum": 0.01
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "installmentCount": {
+            "type": "number",
+            "maximum": 120,
+            "minimum": 2
+          },
+          "recurrenceEndsOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "plan",
+          "description",
+          "counterpartyId",
+          "categoryId",
+          "accountId",
+          "totalAmount",
+          "dueDate"
+        ]
+      },
+      "UpdateFinancialEntryDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "counterpartyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalAmount": {
+            "type": "number",
+            "minimum": 0.01
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "SettleDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "settledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "accountId"
+        ]
+      }
+    }
   }
 }

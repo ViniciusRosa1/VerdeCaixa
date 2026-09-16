@@ -257,6 +257,7 @@ export type FinancialAccountWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"FinancialAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancialAccount"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  entries?: Prisma.FinancialEntryListRelationFilter
   settlements?: Prisma.SettlementListRelationFilter
 }
 
@@ -272,6 +273,7 @@ export type FinancialAccountOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
+  entries?: Prisma.FinancialEntryOrderByRelationAggregateInput
   settlements?: Prisma.SettlementOrderByRelationAggregateInput
 }
 
@@ -291,6 +293,7 @@ export type FinancialAccountWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"FinancialAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FinancialAccount"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  entries?: Prisma.FinancialEntryListRelationFilter
   settlements?: Prisma.SettlementListRelationFilter
 }, "id" | "companyId_publicCode">
 
@@ -339,6 +342,7 @@ export type FinancialAccountCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutAccountsInput
+  entries?: Prisma.FinancialEntryCreateNestedManyWithoutAccountInput
   settlements?: Prisma.SettlementCreateNestedManyWithoutAccountInput
 }
 
@@ -353,6 +357,7 @@ export type FinancialAccountUncheckedCreateInput = {
   deactivatedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  entries?: Prisma.FinancialEntryUncheckedCreateNestedManyWithoutAccountInput
   settlements?: Prisma.SettlementUncheckedCreateNestedManyWithoutAccountInput
 }
 
@@ -367,6 +372,7 @@ export type FinancialAccountUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutAccountsNestedInput
+  entries?: Prisma.FinancialEntryUpdateManyWithoutAccountNestedInput
   settlements?: Prisma.SettlementUpdateManyWithoutAccountNestedInput
 }
 
@@ -381,6 +387,7 @@ export type FinancialAccountUncheckedUpdateInput = {
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  entries?: Prisma.FinancialEntryUncheckedUpdateManyWithoutAccountNestedInput
   settlements?: Prisma.SettlementUncheckedUpdateManyWithoutAccountNestedInput
 }
 
@@ -484,6 +491,11 @@ export type FinancialAccountSumOrderByAggregateInput = {
   openingBalance?: Prisma.SortOrder
 }
 
+export type FinancialAccountNullableScalarRelationFilter = {
+  is?: Prisma.FinancialAccountWhereInput | null
+  isNot?: Prisma.FinancialAccountWhereInput | null
+}
+
 export type FinancialAccountScalarRelationFilter = {
   is?: Prisma.FinancialAccountWhereInput
   isNot?: Prisma.FinancialAccountWhereInput
@@ -543,6 +555,22 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type FinancialAccountCreateNestedOneWithoutEntriesInput = {
+  create?: Prisma.XOR<Prisma.FinancialAccountCreateWithoutEntriesInput, Prisma.FinancialAccountUncheckedCreateWithoutEntriesInput>
+  connectOrCreate?: Prisma.FinancialAccountCreateOrConnectWithoutEntriesInput
+  connect?: Prisma.FinancialAccountWhereUniqueInput
+}
+
+export type FinancialAccountUpdateOneWithoutEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.FinancialAccountCreateWithoutEntriesInput, Prisma.FinancialAccountUncheckedCreateWithoutEntriesInput>
+  connectOrCreate?: Prisma.FinancialAccountCreateOrConnectWithoutEntriesInput
+  upsert?: Prisma.FinancialAccountUpsertWithoutEntriesInput
+  disconnect?: Prisma.FinancialAccountWhereInput | boolean
+  delete?: Prisma.FinancialAccountWhereInput | boolean
+  connect?: Prisma.FinancialAccountWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FinancialAccountUpdateToOneWithWhereWithoutEntriesInput, Prisma.FinancialAccountUpdateWithoutEntriesInput>, Prisma.FinancialAccountUncheckedUpdateWithoutEntriesInput>
+}
+
 export type FinancialAccountCreateNestedOneWithoutSettlementsInput = {
   create?: Prisma.XOR<Prisma.FinancialAccountCreateWithoutSettlementsInput, Prisma.FinancialAccountUncheckedCreateWithoutSettlementsInput>
   connectOrCreate?: Prisma.FinancialAccountCreateOrConnectWithoutSettlementsInput
@@ -567,6 +595,7 @@ export type FinancialAccountCreateWithoutCompanyInput = {
   deactivatedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  entries?: Prisma.FinancialEntryCreateNestedManyWithoutAccountInput
   settlements?: Prisma.SettlementCreateNestedManyWithoutAccountInput
 }
 
@@ -580,6 +609,7 @@ export type FinancialAccountUncheckedCreateWithoutCompanyInput = {
   deactivatedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  entries?: Prisma.FinancialEntryUncheckedCreateNestedManyWithoutAccountInput
   settlements?: Prisma.SettlementUncheckedCreateNestedManyWithoutAccountInput
 }
 
@@ -625,6 +655,78 @@ export type FinancialAccountScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"FinancialAccount"> | Date | string
 }
 
+export type FinancialAccountCreateWithoutEntriesInput = {
+  id?: string
+  publicCode: string
+  name: string
+  institution: string
+  type: $Enums.AccountType
+  openingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deactivatedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutAccountsInput
+  settlements?: Prisma.SettlementCreateNestedManyWithoutAccountInput
+}
+
+export type FinancialAccountUncheckedCreateWithoutEntriesInput = {
+  id?: string
+  companyId: string
+  publicCode: string
+  name: string
+  institution: string
+  type: $Enums.AccountType
+  openingBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  deactivatedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  settlements?: Prisma.SettlementUncheckedCreateNestedManyWithoutAccountInput
+}
+
+export type FinancialAccountCreateOrConnectWithoutEntriesInput = {
+  where: Prisma.FinancialAccountWhereUniqueInput
+  create: Prisma.XOR<Prisma.FinancialAccountCreateWithoutEntriesInput, Prisma.FinancialAccountUncheckedCreateWithoutEntriesInput>
+}
+
+export type FinancialAccountUpsertWithoutEntriesInput = {
+  update: Prisma.XOR<Prisma.FinancialAccountUpdateWithoutEntriesInput, Prisma.FinancialAccountUncheckedUpdateWithoutEntriesInput>
+  create: Prisma.XOR<Prisma.FinancialAccountCreateWithoutEntriesInput, Prisma.FinancialAccountUncheckedCreateWithoutEntriesInput>
+  where?: Prisma.FinancialAccountWhereInput
+}
+
+export type FinancialAccountUpdateToOneWithWhereWithoutEntriesInput = {
+  where?: Prisma.FinancialAccountWhereInput
+  data: Prisma.XOR<Prisma.FinancialAccountUpdateWithoutEntriesInput, Prisma.FinancialAccountUncheckedUpdateWithoutEntriesInput>
+}
+
+export type FinancialAccountUpdateWithoutEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicCode?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  openingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutAccountsNestedInput
+  settlements?: Prisma.SettlementUpdateManyWithoutAccountNestedInput
+}
+
+export type FinancialAccountUncheckedUpdateWithoutEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  publicCode?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  institution?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  openingBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  settlements?: Prisma.SettlementUncheckedUpdateManyWithoutAccountNestedInput
+}
+
 export type FinancialAccountCreateWithoutSettlementsInput = {
   id?: string
   publicCode: string
@@ -636,6 +738,7 @@ export type FinancialAccountCreateWithoutSettlementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutAccountsInput
+  entries?: Prisma.FinancialEntryCreateNestedManyWithoutAccountInput
 }
 
 export type FinancialAccountUncheckedCreateWithoutSettlementsInput = {
@@ -649,6 +752,7 @@ export type FinancialAccountUncheckedCreateWithoutSettlementsInput = {
   deactivatedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  entries?: Prisma.FinancialEntryUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type FinancialAccountCreateOrConnectWithoutSettlementsInput = {
@@ -678,6 +782,7 @@ export type FinancialAccountUpdateWithoutSettlementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutAccountsNestedInput
+  entries?: Prisma.FinancialEntryUpdateManyWithoutAccountNestedInput
 }
 
 export type FinancialAccountUncheckedUpdateWithoutSettlementsInput = {
@@ -691,6 +796,7 @@ export type FinancialAccountUncheckedUpdateWithoutSettlementsInput = {
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  entries?: Prisma.FinancialEntryUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type FinancialAccountCreateManyCompanyInput = {
@@ -715,6 +821,7 @@ export type FinancialAccountUpdateWithoutCompanyInput = {
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  entries?: Prisma.FinancialEntryUpdateManyWithoutAccountNestedInput
   settlements?: Prisma.SettlementUpdateManyWithoutAccountNestedInput
 }
 
@@ -728,6 +835,7 @@ export type FinancialAccountUncheckedUpdateWithoutCompanyInput = {
   deactivatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  entries?: Prisma.FinancialEntryUncheckedUpdateManyWithoutAccountNestedInput
   settlements?: Prisma.SettlementUncheckedUpdateManyWithoutAccountNestedInput
 }
 
@@ -749,10 +857,12 @@ export type FinancialAccountUncheckedUpdateManyWithoutCompanyInput = {
  */
 
 export type FinancialAccountCountOutputType = {
+  entries: number
   settlements: number
 }
 
 export type FinancialAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  entries?: boolean | FinancialAccountCountOutputTypeCountEntriesArgs
   settlements?: boolean | FinancialAccountCountOutputTypeCountSettlementsArgs
 }
 
@@ -764,6 +874,13 @@ export type FinancialAccountCountOutputTypeDefaultArgs<ExtArgs extends runtime.T
    * Select specific fields to fetch from the FinancialAccountCountOutputType
    */
   select?: Prisma.FinancialAccountCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * FinancialAccountCountOutputType without action
+ */
+export type FinancialAccountCountOutputTypeCountEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FinancialEntryWhereInput
 }
 
 /**
@@ -786,6 +903,7 @@ export type FinancialAccountSelect<ExtArgs extends runtime.Types.Extensions.Inte
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  entries?: boolean | Prisma.FinancialAccount$entriesArgs<ExtArgs>
   settlements?: boolean | Prisma.FinancialAccount$settlementsArgs<ExtArgs>
   _count?: boolean | Prisma.FinancialAccountCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["financialAccount"]>
@@ -834,6 +952,7 @@ export type FinancialAccountSelectScalar = {
 export type FinancialAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "publicCode" | "name" | "institution" | "type" | "openingBalance" | "deactivatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["financialAccount"]>
 export type FinancialAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  entries?: boolean | Prisma.FinancialAccount$entriesArgs<ExtArgs>
   settlements?: boolean | Prisma.FinancialAccount$settlementsArgs<ExtArgs>
   _count?: boolean | Prisma.FinancialAccountCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -848,6 +967,7 @@ export type $FinancialAccountPayload<ExtArgs extends runtime.Types.Extensions.In
   name: "FinancialAccount"
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
+    entries: Prisma.$FinancialEntryPayload<ExtArgs>[]
     settlements: Prisma.$SettlementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1256,6 +1376,7 @@ readonly fields: FinancialAccountFieldRefs;
 export interface Prisma__FinancialAccountClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  entries<T extends Prisma.FinancialAccount$entriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialAccount$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancialEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settlements<T extends Prisma.FinancialAccount$settlementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialAccount$settlementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1694,6 +1815,30 @@ export type FinancialAccountDeleteManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many FinancialAccounts to delete.
    */
   limit?: number
+}
+
+/**
+ * FinancialAccount.entries
+ */
+export type FinancialAccount$entriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancialEntry
+   */
+  select?: Prisma.FinancialEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancialEntry
+   */
+  omit?: Prisma.FinancialEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancialEntryInclude<ExtArgs> | null
+  where?: Prisma.FinancialEntryWhereInput
+  orderBy?: Prisma.FinancialEntryOrderByWithRelationInput | Prisma.FinancialEntryOrderByWithRelationInput[]
+  cursor?: Prisma.FinancialEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FinancialEntryScalarFieldEnum | Prisma.FinancialEntryScalarFieldEnum[]
 }
 
 /**

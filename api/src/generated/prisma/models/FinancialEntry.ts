@@ -41,6 +41,7 @@ export type FinancialEntryMinAggregateOutputType = {
   counterpartyId: string | null
   categoryId: string | null
   projectId: string | null
+  accountId: string | null
   createdById: string | null
   kind: $Enums.EntryKind | null
   plan: $Enums.PaymentPlan | null
@@ -59,6 +60,7 @@ export type FinancialEntryMaxAggregateOutputType = {
   counterpartyId: string | null
   categoryId: string | null
   projectId: string | null
+  accountId: string | null
   createdById: string | null
   kind: $Enums.EntryKind | null
   plan: $Enums.PaymentPlan | null
@@ -77,6 +79,7 @@ export type FinancialEntryCountAggregateOutputType = {
   counterpartyId: number
   categoryId: number
   projectId: number
+  accountId: number
   createdById: number
   kind: number
   plan: number
@@ -105,6 +108,7 @@ export type FinancialEntryMinAggregateInputType = {
   counterpartyId?: true
   categoryId?: true
   projectId?: true
+  accountId?: true
   createdById?: true
   kind?: true
   plan?: true
@@ -123,6 +127,7 @@ export type FinancialEntryMaxAggregateInputType = {
   counterpartyId?: true
   categoryId?: true
   projectId?: true
+  accountId?: true
   createdById?: true
   kind?: true
   plan?: true
@@ -141,6 +146,7 @@ export type FinancialEntryCountAggregateInputType = {
   counterpartyId?: true
   categoryId?: true
   projectId?: true
+  accountId?: true
   createdById?: true
   kind?: true
   plan?: true
@@ -246,6 +252,7 @@ export type FinancialEntryGroupByOutputType = {
   counterpartyId: string
   categoryId: string
   projectId: string | null
+  accountId: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -287,6 +294,7 @@ export type FinancialEntryWhereInput = {
   counterpartyId?: Prisma.UuidFilter<"FinancialEntry"> | string
   categoryId?: Prisma.UuidFilter<"FinancialEntry"> | string
   projectId?: Prisma.UuidNullableFilter<"FinancialEntry"> | string | null
+  accountId?: Prisma.UuidNullableFilter<"FinancialEntry"> | string | null
   createdById?: Prisma.UuidFilter<"FinancialEntry"> | string
   kind?: Prisma.EnumEntryKindFilter<"FinancialEntry"> | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFilter<"FinancialEntry"> | $Enums.PaymentPlan
@@ -300,6 +308,7 @@ export type FinancialEntryWhereInput = {
   counterparty?: Prisma.XOR<Prisma.CounterpartyScalarRelationFilter, Prisma.CounterpartyWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  account?: Prisma.XOR<Prisma.FinancialAccountNullableScalarRelationFilter, Prisma.FinancialAccountWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   installments?: Prisma.FinancialInstallmentListRelationFilter
   recurrence?: Prisma.XOR<Prisma.RecurrenceRuleNullableScalarRelationFilter, Prisma.RecurrenceRuleWhereInput> | null
@@ -312,6 +321,7 @@ export type FinancialEntryOrderByWithRelationInput = {
   counterpartyId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   plan?: Prisma.SortOrder
@@ -325,6 +335,7 @@ export type FinancialEntryOrderByWithRelationInput = {
   counterparty?: Prisma.CounterpartyOrderByWithRelationInput
   category?: Prisma.CategoryOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
+  account?: Prisma.FinancialAccountOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   installments?: Prisma.FinancialInstallmentOrderByRelationAggregateInput
   recurrence?: Prisma.RecurrenceRuleOrderByWithRelationInput
@@ -341,6 +352,7 @@ export type FinancialEntryWhereUniqueInput = Prisma.AtLeast<{
   counterpartyId?: Prisma.UuidFilter<"FinancialEntry"> | string
   categoryId?: Prisma.UuidFilter<"FinancialEntry"> | string
   projectId?: Prisma.UuidNullableFilter<"FinancialEntry"> | string | null
+  accountId?: Prisma.UuidNullableFilter<"FinancialEntry"> | string | null
   createdById?: Prisma.UuidFilter<"FinancialEntry"> | string
   kind?: Prisma.EnumEntryKindFilter<"FinancialEntry"> | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFilter<"FinancialEntry"> | $Enums.PaymentPlan
@@ -354,6 +366,7 @@ export type FinancialEntryWhereUniqueInput = Prisma.AtLeast<{
   counterparty?: Prisma.XOR<Prisma.CounterpartyScalarRelationFilter, Prisma.CounterpartyWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  account?: Prisma.XOR<Prisma.FinancialAccountNullableScalarRelationFilter, Prisma.FinancialAccountWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   installments?: Prisma.FinancialInstallmentListRelationFilter
   recurrence?: Prisma.XOR<Prisma.RecurrenceRuleNullableScalarRelationFilter, Prisma.RecurrenceRuleWhereInput> | null
@@ -366,6 +379,7 @@ export type FinancialEntryOrderByWithAggregationInput = {
   counterpartyId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  accountId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   plan?: Prisma.SortOrder
@@ -392,6 +406,7 @@ export type FinancialEntryScalarWhereWithAggregatesInput = {
   counterpartyId?: Prisma.UuidWithAggregatesFilter<"FinancialEntry"> | string
   categoryId?: Prisma.UuidWithAggregatesFilter<"FinancialEntry"> | string
   projectId?: Prisma.UuidNullableWithAggregatesFilter<"FinancialEntry"> | string | null
+  accountId?: Prisma.UuidNullableWithAggregatesFilter<"FinancialEntry"> | string | null
   createdById?: Prisma.UuidWithAggregatesFilter<"FinancialEntry"> | string
   kind?: Prisma.EnumEntryKindWithAggregatesFilter<"FinancialEntry"> | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanWithAggregatesFilter<"FinancialEntry"> | $Enums.PaymentPlan
@@ -418,6 +433,7 @@ export type FinancialEntryCreateInput = {
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
@@ -430,6 +446,7 @@ export type FinancialEntryUncheckedCreateInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -458,6 +475,7 @@ export type FinancialEntryUpdateInput = {
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
@@ -470,6 +488,7 @@ export type FinancialEntryUncheckedUpdateInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -490,6 +509,7 @@ export type FinancialEntryCreateManyInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -521,6 +541,7 @@ export type FinancialEntryUncheckedUpdateManyInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -554,6 +575,7 @@ export type FinancialEntryCountOrderByAggregateInput = {
   counterpartyId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   plan?: Prisma.SortOrder
@@ -576,6 +598,7 @@ export type FinancialEntryMaxOrderByAggregateInput = {
   counterpartyId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   plan?: Prisma.SortOrder
@@ -594,6 +617,7 @@ export type FinancialEntryMinOrderByAggregateInput = {
   counterpartyId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  accountId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   plan?: Prisma.SortOrder
@@ -782,6 +806,48 @@ export type FinancialEntryUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.FinancialEntryScalarWhereInput | Prisma.FinancialEntryScalarWhereInput[]
 }
 
+export type FinancialEntryCreateNestedManyWithoutAccountInput = {
+  create?: Prisma.XOR<Prisma.FinancialEntryCreateWithoutAccountInput, Prisma.FinancialEntryUncheckedCreateWithoutAccountInput> | Prisma.FinancialEntryCreateWithoutAccountInput[] | Prisma.FinancialEntryUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FinancialEntryCreateOrConnectWithoutAccountInput | Prisma.FinancialEntryCreateOrConnectWithoutAccountInput[]
+  createMany?: Prisma.FinancialEntryCreateManyAccountInputEnvelope
+  connect?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+}
+
+export type FinancialEntryUncheckedCreateNestedManyWithoutAccountInput = {
+  create?: Prisma.XOR<Prisma.FinancialEntryCreateWithoutAccountInput, Prisma.FinancialEntryUncheckedCreateWithoutAccountInput> | Prisma.FinancialEntryCreateWithoutAccountInput[] | Prisma.FinancialEntryUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FinancialEntryCreateOrConnectWithoutAccountInput | Prisma.FinancialEntryCreateOrConnectWithoutAccountInput[]
+  createMany?: Prisma.FinancialEntryCreateManyAccountInputEnvelope
+  connect?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+}
+
+export type FinancialEntryUpdateManyWithoutAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.FinancialEntryCreateWithoutAccountInput, Prisma.FinancialEntryUncheckedCreateWithoutAccountInput> | Prisma.FinancialEntryCreateWithoutAccountInput[] | Prisma.FinancialEntryUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FinancialEntryCreateOrConnectWithoutAccountInput | Prisma.FinancialEntryCreateOrConnectWithoutAccountInput[]
+  upsert?: Prisma.FinancialEntryUpsertWithWhereUniqueWithoutAccountInput | Prisma.FinancialEntryUpsertWithWhereUniqueWithoutAccountInput[]
+  createMany?: Prisma.FinancialEntryCreateManyAccountInputEnvelope
+  set?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  disconnect?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  delete?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  connect?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  update?: Prisma.FinancialEntryUpdateWithWhereUniqueWithoutAccountInput | Prisma.FinancialEntryUpdateWithWhereUniqueWithoutAccountInput[]
+  updateMany?: Prisma.FinancialEntryUpdateManyWithWhereWithoutAccountInput | Prisma.FinancialEntryUpdateManyWithWhereWithoutAccountInput[]
+  deleteMany?: Prisma.FinancialEntryScalarWhereInput | Prisma.FinancialEntryScalarWhereInput[]
+}
+
+export type FinancialEntryUncheckedUpdateManyWithoutAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.FinancialEntryCreateWithoutAccountInput, Prisma.FinancialEntryUncheckedCreateWithoutAccountInput> | Prisma.FinancialEntryCreateWithoutAccountInput[] | Prisma.FinancialEntryUncheckedCreateWithoutAccountInput[]
+  connectOrCreate?: Prisma.FinancialEntryCreateOrConnectWithoutAccountInput | Prisma.FinancialEntryCreateOrConnectWithoutAccountInput[]
+  upsert?: Prisma.FinancialEntryUpsertWithWhereUniqueWithoutAccountInput | Prisma.FinancialEntryUpsertWithWhereUniqueWithoutAccountInput[]
+  createMany?: Prisma.FinancialEntryCreateManyAccountInputEnvelope
+  set?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  disconnect?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  delete?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  connect?: Prisma.FinancialEntryWhereUniqueInput | Prisma.FinancialEntryWhereUniqueInput[]
+  update?: Prisma.FinancialEntryUpdateWithWhereUniqueWithoutAccountInput | Prisma.FinancialEntryUpdateWithWhereUniqueWithoutAccountInput[]
+  updateMany?: Prisma.FinancialEntryUpdateManyWithWhereWithoutAccountInput | Prisma.FinancialEntryUpdateManyWithWhereWithoutAccountInput[]
+  deleteMany?: Prisma.FinancialEntryScalarWhereInput | Prisma.FinancialEntryScalarWhereInput[]
+}
+
 export type FinancialEntryCreateNestedManyWithoutProjectInput = {
   create?: Prisma.XOR<Prisma.FinancialEntryCreateWithoutProjectInput, Prisma.FinancialEntryUncheckedCreateWithoutProjectInput> | Prisma.FinancialEntryCreateWithoutProjectInput[] | Prisma.FinancialEntryUncheckedCreateWithoutProjectInput[]
   connectOrCreate?: Prisma.FinancialEntryCreateOrConnectWithoutProjectInput | Prisma.FinancialEntryCreateOrConnectWithoutProjectInput[]
@@ -874,6 +940,7 @@ export type FinancialEntryCreateWithoutCompanyInput = {
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
@@ -885,6 +952,7 @@ export type FinancialEntryUncheckedCreateWithoutCompanyInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -934,6 +1002,7 @@ export type FinancialEntryScalarWhereInput = {
   counterpartyId?: Prisma.UuidFilter<"FinancialEntry"> | string
   categoryId?: Prisma.UuidFilter<"FinancialEntry"> | string
   projectId?: Prisma.UuidNullableFilter<"FinancialEntry"> | string | null
+  accountId?: Prisma.UuidNullableFilter<"FinancialEntry"> | string | null
   createdById?: Prisma.UuidFilter<"FinancialEntry"> | string
   kind?: Prisma.EnumEntryKindFilter<"FinancialEntry"> | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFilter<"FinancialEntry"> | $Enums.PaymentPlan
@@ -960,6 +1029,7 @@ export type FinancialEntryCreateWithoutCreatedByInput = {
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
 }
@@ -971,6 +1041,7 @@ export type FinancialEntryUncheckedCreateWithoutCreatedByInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
   description: string
@@ -1023,6 +1094,7 @@ export type FinancialEntryCreateWithoutCounterpartyInput = {
   company: Prisma.CompanyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
@@ -1034,6 +1106,7 @@ export type FinancialEntryUncheckedCreateWithoutCounterpartyInput = {
   publicCode: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1087,6 +1160,7 @@ export type FinancialEntryCreateWithoutCategoryInput = {
   company: Prisma.CompanyCreateNestedOneWithoutEntriesInput
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
@@ -1098,6 +1172,7 @@ export type FinancialEntryUncheckedCreateWithoutCategoryInput = {
   publicCode: string
   counterpartyId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1137,6 +1212,72 @@ export type FinancialEntryUpdateManyWithWhereWithoutCategoryInput = {
   data: Prisma.XOR<Prisma.FinancialEntryUpdateManyMutationInput, Prisma.FinancialEntryUncheckedUpdateManyWithoutCategoryInput>
 }
 
+export type FinancialEntryCreateWithoutAccountInput = {
+  id?: string
+  publicCode: string
+  kind: $Enums.EntryKind
+  plan: $Enums.PaymentPlan
+  description: string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  canceledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutEntriesInput
+  counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
+  category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
+  project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
+  installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
+  recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
+}
+
+export type FinancialEntryUncheckedCreateWithoutAccountInput = {
+  id?: string
+  companyId: string
+  publicCode: string
+  counterpartyId: string
+  categoryId: string
+  projectId?: string | null
+  createdById: string
+  kind: $Enums.EntryKind
+  plan: $Enums.PaymentPlan
+  description: string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  canceledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  installments?: Prisma.FinancialInstallmentUncheckedCreateNestedManyWithoutEntryInput
+  recurrence?: Prisma.RecurrenceRuleUncheckedCreateNestedOneWithoutEntryInput
+}
+
+export type FinancialEntryCreateOrConnectWithoutAccountInput = {
+  where: Prisma.FinancialEntryWhereUniqueInput
+  create: Prisma.XOR<Prisma.FinancialEntryCreateWithoutAccountInput, Prisma.FinancialEntryUncheckedCreateWithoutAccountInput>
+}
+
+export type FinancialEntryCreateManyAccountInputEnvelope = {
+  data: Prisma.FinancialEntryCreateManyAccountInput | Prisma.FinancialEntryCreateManyAccountInput[]
+  skipDuplicates?: boolean
+}
+
+export type FinancialEntryUpsertWithWhereUniqueWithoutAccountInput = {
+  where: Prisma.FinancialEntryWhereUniqueInput
+  update: Prisma.XOR<Prisma.FinancialEntryUpdateWithoutAccountInput, Prisma.FinancialEntryUncheckedUpdateWithoutAccountInput>
+  create: Prisma.XOR<Prisma.FinancialEntryCreateWithoutAccountInput, Prisma.FinancialEntryUncheckedCreateWithoutAccountInput>
+}
+
+export type FinancialEntryUpdateWithWhereUniqueWithoutAccountInput = {
+  where: Prisma.FinancialEntryWhereUniqueInput
+  data: Prisma.XOR<Prisma.FinancialEntryUpdateWithoutAccountInput, Prisma.FinancialEntryUncheckedUpdateWithoutAccountInput>
+}
+
+export type FinancialEntryUpdateManyWithWhereWithoutAccountInput = {
+  where: Prisma.FinancialEntryScalarWhereInput
+  data: Prisma.XOR<Prisma.FinancialEntryUpdateManyMutationInput, Prisma.FinancialEntryUncheckedUpdateManyWithoutAccountInput>
+}
+
 export type FinancialEntryCreateWithoutProjectInput = {
   id?: string
   publicCode: string
@@ -1151,6 +1292,7 @@ export type FinancialEntryCreateWithoutProjectInput = {
   company: Prisma.CompanyCreateNestedOneWithoutEntriesInput
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
@@ -1162,6 +1304,7 @@ export type FinancialEntryUncheckedCreateWithoutProjectInput = {
   publicCode: string
   counterpartyId: string
   categoryId: string
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1216,6 +1359,7 @@ export type FinancialEntryCreateWithoutInstallmentsInput = {
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   recurrence?: Prisma.RecurrenceRuleCreateNestedOneWithoutEntryInput
 }
@@ -1227,6 +1371,7 @@ export type FinancialEntryUncheckedCreateWithoutInstallmentsInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1270,6 +1415,7 @@ export type FinancialEntryUpdateWithoutInstallmentsInput = {
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
 }
@@ -1281,6 +1427,7 @@ export type FinancialEntryUncheckedUpdateWithoutInstallmentsInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1308,6 +1455,7 @@ export type FinancialEntryCreateWithoutRecurrenceInput = {
   counterparty: Prisma.CounterpartyCreateNestedOneWithoutEntriesInput
   category: Prisma.CategoryCreateNestedOneWithoutEntriesInput
   project?: Prisma.ProjectCreateNestedOneWithoutEntriesInput
+  account?: Prisma.FinancialAccountCreateNestedOneWithoutEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedEntriesInput
   installments?: Prisma.FinancialInstallmentCreateNestedManyWithoutEntryInput
 }
@@ -1319,6 +1467,7 @@ export type FinancialEntryUncheckedCreateWithoutRecurrenceInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1362,6 +1511,7 @@ export type FinancialEntryUpdateWithoutRecurrenceInput = {
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
 }
@@ -1373,6 +1523,7 @@ export type FinancialEntryUncheckedUpdateWithoutRecurrenceInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1391,6 +1542,7 @@ export type FinancialEntryCreateManyCompanyInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1416,6 +1568,7 @@ export type FinancialEntryUpdateWithoutCompanyInput = {
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
@@ -1427,6 +1580,7 @@ export type FinancialEntryUncheckedUpdateWithoutCompanyInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1446,6 +1600,7 @@ export type FinancialEntryUncheckedUpdateManyWithoutCompanyInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1464,6 +1619,7 @@ export type FinancialEntryCreateManyCreatedByInput = {
   counterpartyId: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
   description: string
@@ -1489,6 +1645,7 @@ export type FinancialEntryUpdateWithoutCreatedByInput = {
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
 }
@@ -1500,6 +1657,7 @@ export type FinancialEntryUncheckedUpdateWithoutCreatedByInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1519,6 +1677,7 @@ export type FinancialEntryUncheckedUpdateManyWithoutCreatedByInput = {
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
   description?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1535,6 +1694,7 @@ export type FinancialEntryCreateManyCounterpartyInput = {
   publicCode: string
   categoryId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1560,6 +1720,7 @@ export type FinancialEntryUpdateWithoutCounterpartyInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
@@ -1571,6 +1732,7 @@ export type FinancialEntryUncheckedUpdateWithoutCounterpartyInput = {
   publicCode?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1590,6 +1752,7 @@ export type FinancialEntryUncheckedUpdateManyWithoutCounterpartyInput = {
   publicCode?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1607,6 +1770,7 @@ export type FinancialEntryCreateManyCategoryInput = {
   publicCode: string
   counterpartyId: string
   projectId?: string | null
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1632,6 +1796,7 @@ export type FinancialEntryUpdateWithoutCategoryInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutEntriesNestedInput
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
@@ -1643,6 +1808,7 @@ export type FinancialEntryUncheckedUpdateWithoutCategoryInput = {
   publicCode?: Prisma.StringFieldUpdateOperationsInput | string
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1662,6 +1828,83 @@ export type FinancialEntryUncheckedUpdateManyWithoutCategoryInput = {
   publicCode?: Prisma.StringFieldUpdateOperationsInput | string
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
+  plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type FinancialEntryCreateManyAccountInput = {
+  id?: string
+  companyId: string
+  publicCode: string
+  counterpartyId: string
+  categoryId: string
+  projectId?: string | null
+  createdById: string
+  kind: $Enums.EntryKind
+  plan: $Enums.PaymentPlan
+  description: string
+  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: string | null
+  canceledAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type FinancialEntryUpdateWithoutAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  publicCode?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
+  plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutEntriesNestedInput
+  counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutEntriesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
+  installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
+  recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
+}
+
+export type FinancialEntryUncheckedUpdateWithoutAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  publicCode?: Prisma.StringFieldUpdateOperationsInput | string
+  counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
+  plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  installments?: Prisma.FinancialInstallmentUncheckedUpdateManyWithoutEntryNestedInput
+  recurrence?: Prisma.RecurrenceRuleUncheckedUpdateOneWithoutEntryNestedInput
+}
+
+export type FinancialEntryUncheckedUpdateManyWithoutAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  publicCode?: Prisma.StringFieldUpdateOperationsInput | string
+  counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1679,6 +1922,7 @@ export type FinancialEntryCreateManyProjectInput = {
   publicCode: string
   counterpartyId: string
   categoryId: string
+  accountId?: string | null
   createdById: string
   kind: $Enums.EntryKind
   plan: $Enums.PaymentPlan
@@ -1704,6 +1948,7 @@ export type FinancialEntryUpdateWithoutProjectInput = {
   company?: Prisma.CompanyUpdateOneRequiredWithoutEntriesNestedInput
   counterparty?: Prisma.CounterpartyUpdateOneRequiredWithoutEntriesNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutEntriesNestedInput
+  account?: Prisma.FinancialAccountUpdateOneWithoutEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedEntriesNestedInput
   installments?: Prisma.FinancialInstallmentUpdateManyWithoutEntryNestedInput
   recurrence?: Prisma.RecurrenceRuleUpdateOneWithoutEntryNestedInput
@@ -1715,6 +1960,7 @@ export type FinancialEntryUncheckedUpdateWithoutProjectInput = {
   publicCode?: Prisma.StringFieldUpdateOperationsInput | string
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1734,6 +1980,7 @@ export type FinancialEntryUncheckedUpdateManyWithoutProjectInput = {
   publicCode?: Prisma.StringFieldUpdateOperationsInput | string
   counterpartyId?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.EnumEntryKindFieldUpdateOperationsInput | $Enums.EntryKind
   plan?: Prisma.EnumPaymentPlanFieldUpdateOperationsInput | $Enums.PaymentPlan
@@ -1783,6 +2030,7 @@ export type FinancialEntrySelect<ExtArgs extends runtime.Types.Extensions.Intern
   counterpartyId?: boolean
   categoryId?: boolean
   projectId?: boolean
+  accountId?: boolean
   createdById?: boolean
   kind?: boolean
   plan?: boolean
@@ -1796,6 +2044,7 @@ export type FinancialEntrySelect<ExtArgs extends runtime.Types.Extensions.Intern
   counterparty?: boolean | Prisma.CounterpartyDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   project?: boolean | Prisma.FinancialEntry$projectArgs<ExtArgs>
+  account?: boolean | Prisma.FinancialEntry$accountArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   installments?: boolean | Prisma.FinancialEntry$installmentsArgs<ExtArgs>
   recurrence?: boolean | Prisma.FinancialEntry$recurrenceArgs<ExtArgs>
@@ -1809,6 +2058,7 @@ export type FinancialEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Type
   counterpartyId?: boolean
   categoryId?: boolean
   projectId?: boolean
+  accountId?: boolean
   createdById?: boolean
   kind?: boolean
   plan?: boolean
@@ -1822,6 +2072,7 @@ export type FinancialEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Type
   counterparty?: boolean | Prisma.CounterpartyDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   project?: boolean | Prisma.FinancialEntry$projectArgs<ExtArgs>
+  account?: boolean | Prisma.FinancialEntry$accountArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["financialEntry"]>
 
@@ -1832,6 +2083,7 @@ export type FinancialEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   counterpartyId?: boolean
   categoryId?: boolean
   projectId?: boolean
+  accountId?: boolean
   createdById?: boolean
   kind?: boolean
   plan?: boolean
@@ -1845,6 +2097,7 @@ export type FinancialEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   counterparty?: boolean | Prisma.CounterpartyDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   project?: boolean | Prisma.FinancialEntry$projectArgs<ExtArgs>
+  account?: boolean | Prisma.FinancialEntry$accountArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["financialEntry"]>
 
@@ -1855,6 +2108,7 @@ export type FinancialEntrySelectScalar = {
   counterpartyId?: boolean
   categoryId?: boolean
   projectId?: boolean
+  accountId?: boolean
   createdById?: boolean
   kind?: boolean
   plan?: boolean
@@ -1866,12 +2120,13 @@ export type FinancialEntrySelectScalar = {
   updatedAt?: boolean
 }
 
-export type FinancialEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "publicCode" | "counterpartyId" | "categoryId" | "projectId" | "createdById" | "kind" | "plan" | "description" | "totalAmount" | "notes" | "canceledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["financialEntry"]>
+export type FinancialEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "publicCode" | "counterpartyId" | "categoryId" | "projectId" | "accountId" | "createdById" | "kind" | "plan" | "description" | "totalAmount" | "notes" | "canceledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["financialEntry"]>
 export type FinancialEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   counterparty?: boolean | Prisma.CounterpartyDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   project?: boolean | Prisma.FinancialEntry$projectArgs<ExtArgs>
+  account?: boolean | Prisma.FinancialEntry$accountArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   installments?: boolean | Prisma.FinancialEntry$installmentsArgs<ExtArgs>
   recurrence?: boolean | Prisma.FinancialEntry$recurrenceArgs<ExtArgs>
@@ -1882,6 +2137,7 @@ export type FinancialEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Typ
   counterparty?: boolean | Prisma.CounterpartyDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   project?: boolean | Prisma.FinancialEntry$projectArgs<ExtArgs>
+  account?: boolean | Prisma.FinancialEntry$accountArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type FinancialEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1889,6 +2145,7 @@ export type FinancialEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
   counterparty?: boolean | Prisma.CounterpartyDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   project?: boolean | Prisma.FinancialEntry$projectArgs<ExtArgs>
+  account?: boolean | Prisma.FinancialEntry$accountArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1899,6 +2156,7 @@ export type $FinancialEntryPayload<ExtArgs extends runtime.Types.Extensions.Inte
     counterparty: Prisma.$CounterpartyPayload<ExtArgs>
     category: Prisma.$CategoryPayload<ExtArgs>
     project: Prisma.$ProjectPayload<ExtArgs> | null
+    account: Prisma.$FinancialAccountPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
     installments: Prisma.$FinancialInstallmentPayload<ExtArgs>[]
     recurrence: Prisma.$RecurrenceRulePayload<ExtArgs> | null
@@ -1910,6 +2168,7 @@ export type $FinancialEntryPayload<ExtArgs extends runtime.Types.Extensions.Inte
     counterpartyId: string
     categoryId: string
     projectId: string | null
+    accountId: string | null
     createdById: string
     kind: $Enums.EntryKind
     plan: $Enums.PaymentPlan
@@ -2317,6 +2576,7 @@ export interface Prisma__FinancialEntryClient<T, Null = never, ExtArgs extends r
   counterparty<T extends Prisma.CounterpartyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CounterpartyDefaultArgs<ExtArgs>>): Prisma.Prisma__CounterpartyClient<runtime.Types.Result.GetResult<Prisma.$CounterpartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.FinancialEntry$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialEntry$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  account<T extends Prisma.FinancialEntry$accountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialEntry$accountArgs<ExtArgs>>): Prisma.Prisma__FinancialAccountClient<runtime.Types.Result.GetResult<Prisma.$FinancialAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   installments<T extends Prisma.FinancialEntry$installmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialEntry$installmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FinancialInstallmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recurrence<T extends Prisma.FinancialEntry$recurrenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FinancialEntry$recurrenceArgs<ExtArgs>>): Prisma.Prisma__RecurrenceRuleClient<runtime.Types.Result.GetResult<Prisma.$RecurrenceRulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2355,6 +2615,7 @@ export interface FinancialEntryFieldRefs {
   readonly counterpartyId: Prisma.FieldRef<"FinancialEntry", 'String'>
   readonly categoryId: Prisma.FieldRef<"FinancialEntry", 'String'>
   readonly projectId: Prisma.FieldRef<"FinancialEntry", 'String'>
+  readonly accountId: Prisma.FieldRef<"FinancialEntry", 'String'>
   readonly createdById: Prisma.FieldRef<"FinancialEntry", 'String'>
   readonly kind: Prisma.FieldRef<"FinancialEntry", 'EntryKind'>
   readonly plan: Prisma.FieldRef<"FinancialEntry", 'PaymentPlan'>
@@ -2781,6 +3042,25 @@ export type FinancialEntry$projectArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.ProjectInclude<ExtArgs> | null
   where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * FinancialEntry.account
+ */
+export type FinancialEntry$accountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FinancialAccount
+   */
+  select?: Prisma.FinancialAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FinancialAccount
+   */
+  omit?: Prisma.FinancialAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FinancialAccountInclude<ExtArgs> | null
+  where?: Prisma.FinancialAccountWhereInput
 }
 
 /**

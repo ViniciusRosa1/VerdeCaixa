@@ -1,7 +1,10 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import PDFDocument from "pdfkit";
 import { PrismaService } from "../../database/prisma.service.js";
-import type { PeriodQueryDto } from "./insights.dto.js";
+import type {
+  DashboardQueryDto,
+  PeriodQueryDto,
+} from "./insights.dto.js";
 
 const startOfMonth = () => {
   const now = new Date();
@@ -23,10 +26,15 @@ const money = (value: number) => value.toFixed(2);
 export class InsightsService {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
-  async dashboard(companyId: string) {
+  async dashboard(companyId: string, query: DashboardQueryDto = {}) {
+    await this.ensureAccount(companyId, query.accountId);
     const [accounts, installments, recent] = await Promise.all([
       this.prisma.financialAccount.findMany({
-        where: { companyId, deactivatedAt: null },
+        where: {
+          companyId,
+          deactivatedAt: null,
+          ...(query.accountId ? { id: query.accountId } : {}),
+        },
         include: {
           settlements: {
             include: { installment: { include: { entry: true } } },
@@ -34,11 +42,27 @@ export class InsightsService {
         },
       }),
       this.prisma.financialInstallment.findMany({
-        where: { entry: { companyId, canceledAt: null } },
+        where: {
+          entry: {
+            companyId,
+            canceledAt: null,
+            ...(query.accountId ? { accountId: query.accountId } : {}),
+          },
+        },
         include: { entry: true },
       }),
       this.prisma.financialInstallment.findMany({
-        where: { entry: { companyId, canceledAt: null } },
+        where: {
+          entry: { companyId, canceledAt: null },
+          ...(query.accountId
+            ? {
+                OR: [
+                  { entry: { accountId: query.accountId } },
+                  { settlement: { accountId: query.accountId } },
+                ],
+              }
+            : {}),
+        },
         include: {
           entry: { include: { counterparty: true } },
           settlement: true,
@@ -87,6 +111,7 @@ export class InsightsService {
   }
 
   async agenda(companyId: string, query: PeriodQueryDto) {
+    await this.ensureAccount(companyId, query.accountId);
     const dueDate =
       query.from || query.to
         ? range(query)
@@ -95,7 +120,11 @@ export class InsightsService {
       where: {
         status: "PENDING",
         dueDate,
-        entry: { companyId, canceledAt: null },
+        entry: {
+          companyId,
+          canceledAt: null,
+          ...(query.accountId ? { accountId: query.accountId } : {}),
+        },
       },
       include: { entry: { include: { counterparty: true, category: true } } },
       orderBy: { dueDate: "asc" },
@@ -115,9 +144,11 @@ export class InsightsService {
   }
 
   async report(companyId: string, kind: string, query: PeriodQueryDto) {
+    await this.ensureAccount(companyId, query.accountId);
     const settlements = await this.prisma.settlement.findMany({
       where: {
         settledAt: range(query),
+        ...(query.accountId ? { accountId: query.accountId } : {}),
         installment: { entry: { companyId, canceledAt: null } },
       },
       include: {
@@ -156,7 +187,11 @@ export class InsightsService {
       };
     }
     const accounts = await this.prisma.financialAccount.findMany({
-      where: { companyId, deactivatedAt: null },
+      where: {
+        companyId,
+        deactivatedAt: null,
+        ...(query.accountId ? { id: query.accountId } : {}),
+      },
       include: {
         settlements: { include: { installment: { include: { entry: true } } } },
       },
@@ -185,7 +220,14 @@ export class InsightsService {
         finalBalance: money(balance),
       };
     const pending = await this.prisma.financialInstallment.findMany({
-      where: { status: "PENDING", entry: { companyId, canceledAt: null } },
+      where: {
+        status: "PENDING",
+        entry: {
+          companyId,
+          canceledAt: null,
+          ...(query.accountId ? { accountId: query.accountId } : {}),
+        },
+      },
       include: { entry: true },
     });
     const receivable = pending
@@ -287,6 +329,7 @@ export class InsightsService {
     const settlements = await this.prisma.settlement.findMany({
       where: {
         settledAt: { gte: from, lte: to },
+        ...(query.accountId ? { accountId: query.accountId } : {}),
         installment: { entry: { companyId, canceledAt: null } },
       },
       include: { installment: { include: { entry: true } } },
@@ -336,5 +379,14 @@ export class InsightsService {
       status: item.status,
       settledAt: item.settlement?.settledAt,
     };
+  }
+
+  private async ensureAccount(companyId: string, accountId?: string) {
+    if (!accountId) return;
+    const account = await this.prisma.financialAccount.findFirst({
+      where: { id: accountId, companyId, deactivatedAt: null },
+      select: { id: true },
+    });
+    if (!account) throw new BadRequestException("Conta financeira inválida");
   }
 }

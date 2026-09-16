@@ -126,6 +126,7 @@ export class FinancialService {
           counterparty: true,
           category: true,
           project: true,
+          account: true,
           installments: {
             orderBy: { sequence: "asc" },
             include: { settlement: true },
@@ -151,6 +152,7 @@ export class FinancialService {
         counterparty: true,
         category: true,
         project: true,
+        account: true,
         installments: {
           orderBy: { sequence: "asc" },
           include: { settlement: true },
@@ -205,6 +207,7 @@ export class FinancialService {
         description: dto.description,
         counterpartyId: dto.counterpartyId,
         categoryId: dto.categoryId,
+        accountId: dto.accountId,
         projectId: dto.projectId,
         totalAmount: dto.totalAmount,
         notes: dto.notes,
@@ -224,6 +227,7 @@ export class FinancialService {
         counterparty: true,
         category: true,
         project: true,
+        account: true,
         installments: {
           orderBy: { sequence: "asc" },
           include: { settlement: true },
@@ -243,20 +247,94 @@ export class FinancialService {
   async update(user: AuthUser, id: string, dto: UpdateFinancialEntryDto) {
     const existing = await this.prisma.financialEntry.findFirst({
       where: { id, companyId: user.companyId, canceledAt: null },
+      include: {
+        installments: { orderBy: { sequence: "asc" } },
+        recurrence: true,
+      },
     });
     if (!existing) throw new NotFoundException("Lançamento não encontrado");
-    const row = await this.prisma.financialEntry.update({
-      where: { id },
-      data: dto,
-      include: {
-        counterparty: true,
-        category: true,
-        project: true,
-        installments: {
-          orderBy: { sequence: "asc" },
-          include: { settlement: true },
-        },
+    const changesSchedule =
+      dto.totalAmount !== undefined || dto.dueDate !== undefined;
+    const changesFinancialData =
+      changesSchedule || dto.accountId !== undefined;
+    if (
+      changesFinancialData &&
+      existing.installments.some((item) => item.status === "SETTLED")
+    ) {
+      throw new BadRequestException(
+        "Valor, vencimento e conta financeira não podem ser alterados após a liquidação",
+      );
+    }
+
+    await this.validateRelations(
+      user.companyId,
+      {
+        kind: existing.kind,
+        counterpartyId: dto.counterpartyId ?? existing.counterpartyId,
+        categoryId: dto.categoryId ?? existing.categoryId,
+        projectId:
+          dto.projectId === undefined ? existing.projectId ?? undefined : dto.projectId,
+        accountId: dto.accountId ?? existing.accountId ?? "",
       },
+      dto.accountId === undefined && Boolean(existing.accountId),
+    );
+
+    const row = await this.prisma.$transaction(async (tx) => {
+      const { dueDate, ...entryData } = dto;
+      if (changesSchedule) {
+        const total = dto.totalAmount ?? Number(existing.totalAmount);
+        const firstDueDate = dueDate
+          ? dateOnly(dueDate)
+          : existing.installments[0]!.dueDate;
+        const installments = this.installments(
+          total,
+          firstDueDate,
+          existing.installments.length,
+          existing.plan === "INSTALLMENT",
+        );
+        await tx.financialInstallment.deleteMany({ where: { entryId: id } });
+        await tx.financialInstallment.createMany({
+          data: installments.map((item) => ({ ...item, entryId: id })),
+        });
+        if (existing.recurrence) {
+          const durationMonths = existing.recurrence.endsOn
+            ? Math.max(
+                0,
+                (existing.recurrence.endsOn.getUTCFullYear() -
+                  existing.recurrence.startsOn.getUTCFullYear()) *
+                  12 +
+                  existing.recurrence.endsOn.getUTCMonth() -
+                  existing.recurrence.startsOn.getUTCMonth(),
+              )
+            : null;
+          await tx.recurrenceRule.update({
+            where: { id: existing.recurrence.id },
+            data: {
+              startsOn: firstDueDate,
+              endsOn:
+                durationMonths === null
+                  ? null
+                  : addMonths(firstDueDate, durationMonths),
+              generatedUntil: installments.at(-1)!.dueDate,
+            },
+          });
+        }
+      }
+      return tx.financialEntry.update({
+        where: { id },
+        data: entryData,
+        include: {
+          counterparty: true,
+          category: true,
+          project: true,
+          account: true,
+          installments: {
+            orderBy: { sequence: "asc" },
+            include: { settlement: true },
+          },
+          recurrence: true,
+        },
+      });
     });
     await this.audit(
       user,
@@ -308,6 +386,14 @@ export class FinancialService {
     if (!installment) throw new NotFoundException("Parcela não encontrada");
     if (installment.status !== "PENDING")
       throw new BadRequestException("A parcela não está pendente");
+    if (!installment.entry.accountId)
+      throw new BadRequestException(
+        "Informe a conta financeira do lançamento antes de liquidar",
+      );
+    if (installment.entry.accountId !== dto.accountId)
+      throw new BadRequestException(
+        "A conta da liquidação deve ser a conta financeira do lançamento",
+      );
     const account = await this.prisma.financialAccount.findFirst({
       where: {
         id: dto.accountId,
@@ -467,9 +553,13 @@ export class FinancialService {
 
   private async validateRelations(
     companyId: string,
-    dto: CreateFinancialEntryDto,
+    dto: Pick<
+      CreateFinancialEntryDto,
+      "kind" | "counterpartyId" | "categoryId" | "projectId" | "accountId"
+    >,
+    allowInactiveAccount = false,
   ) {
-    const [counterparty, category, project] = await Promise.all([
+    const [counterparty, category, project, account] = await Promise.all([
       this.prisma.counterparty.findFirst({
         where: { id: dto.counterpartyId, companyId, deactivatedAt: null },
       }),
@@ -481,8 +571,17 @@ export class FinancialService {
             where: { id: dto.projectId, companyId, deactivatedAt: null },
           })
         : Promise.resolve(true),
+      dto.accountId
+        ? this.prisma.financialAccount.findFirst({
+            where: {
+              id: dto.accountId,
+              companyId,
+              deactivatedAt: allowInactiveAccount ? undefined : null,
+            },
+          })
+        : Promise.resolve(false),
     ]);
-    if (!counterparty || !category || !project)
+    if (!counterparty || !category || !project || !account)
       throw new BadRequestException("Há um cadastro inválido no lançamento");
     if (
       (dto.kind === "INCOME" && category.kind !== "INCOME") ||

@@ -284,6 +284,7 @@ export const FinancialEntryScalarFieldEnum = {
   counterpartyId: 'counterpartyId',
   categoryId: 'categoryId',
   projectId: 'projectId',
+  accountId: 'accountId',
   createdById: 'createdById',
   kind: 'kind',
   plan: 'plan',

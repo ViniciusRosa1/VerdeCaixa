@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param, Query, Res } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import type { Response } from "express";
 import {
   CurrentUser,
@@ -8,7 +8,11 @@ import {
 import { Public } from "../../common/public.decorator.js";
 import { PrismaService } from "../../database/prisma.service.js";
 import { RequirePermissions } from "../auth/permissions.decorator.js";
-import { ExportQueryDto, PeriodQueryDto } from "./insights.dto.js";
+import {
+  DashboardQueryDto,
+  ExportQueryDto,
+  PeriodQueryDto,
+} from "./insights.dto.js";
 import { InsightsService } from "./insights.service.js";
 
 @ApiTags("health")
@@ -28,8 +32,13 @@ export class InsightsController {
   constructor(
     @Inject(InsightsService) private readonly service: InsightsService,
   ) {}
-  @Get("dashboard") dashboard(@CurrentUser() u: AuthUser) {
-    return this.service.dashboard(u.companyId);
+  @Get("dashboard")
+  @ApiQuery({ name: "accountId", required: false, type: String })
+  dashboard(
+    @CurrentUser() u: AuthUser,
+    @Query() q: DashboardQueryDto,
+  ) {
+    return this.service.dashboard(u.companyId, q);
   }
   @Get("agenda") agenda(
     @CurrentUser() u: AuthUser,
@@ -37,7 +46,9 @@ export class InsightsController {
   ) {
     return this.service.agenda(u.companyId, q);
   }
-  @Get("reports/:report") report(
+  @Get("reports/:report")
+  @ApiQuery({ name: "accountId", required: false, type: String })
+  report(
     @CurrentUser() u: AuthUser,
     @Param("report") report: string,
     @Query() q: PeriodQueryDto,
