@@ -679,7 +679,52 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        CreateFinancialEntryDto: {
+            /** @enum {string} */
+            kind: "INCOME" | "EXPENSE";
+            /** @enum {string} */
+            plan: "CASH" | "INSTALLMENT" | "RECURRING";
+            description: string;
+            /** Format: uuid */
+            counterpartyId: string;
+            /** Format: uuid */
+            categoryId: string;
+            /** Format: uuid */
+            accountId: string;
+            /** Format: uuid */
+            projectId?: string;
+            totalAmount: number;
+            /** Format: date */
+            dueDate: string;
+            installmentCount?: number;
+            /** Format: date */
+            recurrenceEndsOn?: string;
+            notes?: string;
+        };
+        UpdateFinancialEntryDto: {
+            description?: string;
+            /** Format: uuid */
+            counterpartyId?: string;
+            /** Format: uuid */
+            categoryId?: string;
+            /** Format: uuid */
+            accountId?: string;
+            /** Format: uuid */
+            projectId?: string;
+            totalAmount?: number;
+            /** Format: date */
+            dueDate?: string;
+            notes?: string;
+        };
+        SettleDto: {
+            /** Format: uuid */
+            accountId: string;
+            /** Format: date-time */
+            settledAt?: string;
+            notes?: string;
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;
@@ -1358,7 +1403,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateFinancialEntryDto"];
+            };
+        };
         responses: {
             201: {
                 headers: {
@@ -1409,7 +1458,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateFinancialEntryDto"];
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -1426,7 +1479,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettleDto"];
+            };
+        };
         responses: {
             201: {
                 headers: {
@@ -1472,7 +1529,9 @@ export interface operations {
     };
     InsightsController_dashboard: {
         parameters: {
-            query?: never;
+            query?: {
+                accountId?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1506,7 +1565,9 @@ export interface operations {
     };
     InsightsController_report: {
         parameters: {
-            query?: never;
+            query?: {
+                accountId?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;

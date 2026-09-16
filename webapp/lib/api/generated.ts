@@ -118,6 +118,7 @@ export interface ApiEntry {
   dueDate: string;
   counterparty: ApiCounterparty;
   category: ApiCategory;
+  account?: ApiAccount | null;
   project?: ApiProject;
   installments: ApiInstallment[];
   notes?: string;

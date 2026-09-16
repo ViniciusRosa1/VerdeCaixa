@@ -56,9 +56,9 @@ export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return <textarea {...props} className={join(inputClass, "min-h-24 py-3", props.className)} />;
 }
 
-export function Select({ name, defaultValue, value, onValueChange, placeholder = "Selecione", children, required }: { name: string; defaultValue?: string; value?: string; onValueChange?: (value: string) => void; placeholder?: string; children: ReactNode; required?: boolean }) {
-  return <SelectPrimitive.Root name={name} defaultValue={defaultValue} value={value} onValueChange={onValueChange} required={required}>
-    <SelectPrimitive.Trigger id={name} className={`${inputClass} flex items-center justify-between`}><SelectPrimitive.Value placeholder={placeholder} /><SelectPrimitive.Icon><ChevronDown className="size-4" /></SelectPrimitive.Icon></SelectPrimitive.Trigger>
+export function Select({ name, defaultValue, value, onValueChange, placeholder = "Selecione", children, required, disabled, className }: { name: string; defaultValue?: string; value?: string; onValueChange?: (value: string) => void; placeholder?: string; children: ReactNode; required?: boolean; disabled?: boolean; className?: string }) {
+  return <SelectPrimitive.Root name={name} defaultValue={defaultValue} value={value} onValueChange={onValueChange} required={required} disabled={disabled}>
+    <SelectPrimitive.Trigger id={name} className={join(inputClass, "flex items-center justify-between disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-70", className)}><SelectPrimitive.Value placeholder={placeholder} /><SelectPrimitive.Icon><ChevronDown className="size-4" /></SelectPrimitive.Icon></SelectPrimitive.Trigger>
     <SelectPrimitive.Portal><SelectPrimitive.Content position="popper" sideOffset={4} className="z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-xl border border-border bg-white p-1 shadow-xl"><SelectPrimitive.Viewport>{children}</SelectPrimitive.Viewport></SelectPrimitive.Content></SelectPrimitive.Portal>
   </SelectPrimitive.Root>;
 }

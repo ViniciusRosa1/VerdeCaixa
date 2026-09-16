@@ -15,10 +15,13 @@ import type {
   Page,
 } from "./generated";
 
-export const useDashboard = () =>
+export const useDashboard = (accountId = "") =>
   useQuery({
-    queryKey: ["dashboard"],
-    queryFn: () => api<DashboardData>("/dashboard"),
+    queryKey: ["dashboard", accountId],
+    queryFn: () =>
+      api<DashboardData>(
+        `/dashboard${accountId ? `?accountId=${encodeURIComponent(accountId)}` : ""}`,
+      ),
   });
 export const useEntries = (
   kind: "INCOME" | "EXPENSE",
@@ -99,7 +102,7 @@ export function useReverseSettlement() {
       api(`/financial-installments/${installmentId}/settlements`, {
         method: "DELETE",
       }),
-    onSuccess: () => query.invalidateQueries({ queryKey: ["entries"] }),
+    onSuccess: () => query.invalidateQueries(),
   });
 }
 
@@ -111,7 +114,7 @@ export function useSaveEntry(id?: string | null) {
         method: id ? "PATCH" : "POST",
         body: JSON.stringify(body),
       }),
-    onSuccess: () => query.invalidateQueries({ queryKey: ["entries"] }),
+    onSuccess: () => query.invalidateQueries(),
   });
 }
 
@@ -120,6 +123,6 @@ export function useCancelEntry() {
   return useMutation({
     mutationFn: (id: string) =>
       api(`/financial-entries/${id}`, { method: "DELETE" }),
-    onSuccess: () => query.invalidateQueries({ queryKey: ["entries"] }),
+    onSuccess: () => query.invalidateQueries(),
   });
 }

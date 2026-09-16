@@ -22,7 +22,6 @@ export function FinancialEntryListView({
   onQuery,
   status,
   onStatus,
-  accountName,
   onSettle,
   onDelete,
 }: {
@@ -38,7 +37,6 @@ export function FinancialEntryListView({
   onQuery(value: string): void;
   status: string;
   onStatus(value: string): void;
-  accountName?: string;
   onSettle(entry: ApiEntry): Promise<unknown>;
   onDelete(entry: ApiEntry): Promise<unknown>;
 }) {
@@ -63,11 +61,6 @@ export function FinancialEntryListView({
         title={title}
         description={description}
       />
-      <div className="mb-4 flex justify-end">
-        <Button asChild>
-          <Link href={createHref}>{createLabel}</Link>
-        </Button>
-      </div>
       {actionError && (
         <Card className="mb-4 border-danger">
           <CardContent className="py-3 text-sm text-danger">
@@ -76,25 +69,36 @@ export function FinancialEntryListView({
         </Card>
       )}
       <Card className="overflow-hidden">
-        <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row">
+        <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center">
           <label className="relative flex-1">
             <span className="sr-only">Pesquisar</span>
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
             <input
               value={query}
               onChange={(event) => onQuery(event.target.value)}
-              className="h-10 w-full rounded-xl border border-border bg-surface pl-9 pr-3 text-sm"
+              className="h-11 w-full rounded-xl border border-border bg-surface pl-9 pr-3 text-sm"
               placeholder="Pesquisar..."
             />
           </label>
           <div className="w-full sm:w-48">
-            <Select name="status" value={status} onValueChange={onStatus}>
+            <label className="sr-only" htmlFor="status">
+              Situação
+            </label>
+            <Select
+              name="status"
+              value={status}
+              onValueChange={onStatus}
+              className="mt-0"
+            >
               <SelectItem value="Todos">Todos</SelectItem>
               <SelectItem value="PENDING">Pendente</SelectItem>
               <SelectItem value="OVERDUE">Vencido</SelectItem>
               <SelectItem value="SETTLED">Liquidado</SelectItem>
             </Select>
           </div>
+          <Button asChild className="w-full sm:w-auto">
+            <Link href={createHref}>{createLabel}</Link>
+          </Button>
         </div>
         {loading ? (
           <State text="Carregando dados…" />
@@ -117,7 +121,8 @@ export function FinancialEntryListView({
                 <div>
                   <p className="font-medium">{entry.description}</p>
                   <p className="text-xs text-muted">
-                    {entry.publicCode} · {entry.counterparty.name}
+                    {entry.publicCode} · {entry.counterparty.name} ·{" "}
+                    {entry.account?.name ?? "Sem conta financeira"}
                   </p>
                 </div>
                 <span className="text-sm">
@@ -142,7 +147,11 @@ export function FinancialEntryListView({
                     <>
                       <ConfirmDialog
                         title="Confirmar liquidação?"
-                        description={`O valor será liquidado na conta ${accountName ?? "financeira selecionada"}.`}
+                        description={
+                          entry.account
+                            ? `O valor será liquidado na conta ${entry.account.name}.`
+                            : "Informe a conta financeira do lançamento antes de liquidar."
+                        }
                         onConfirm={() => action(() => onSettle(entry))}
                         trigger={
                           <button
@@ -153,7 +162,9 @@ export function FinancialEntryListView({
                           </button>
                         }
                       />
-                      <ConfirmDialog
+                      {!entry.installments.some(
+                        (item) => item.status === "SETTLED",
+                      ) && <ConfirmDialog
                         destructive
                         title="Excluir lançamento?"
                         description="O lançamento será cancelado e deixará de aparecer nas listagens."
@@ -167,7 +178,7 @@ export function FinancialEntryListView({
                             <Trash2 className="size-4" />
                           </button>
                         }
-                      />
+                      />}
                     </>
                   )}
                 </div>

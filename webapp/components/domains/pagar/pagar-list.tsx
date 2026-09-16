@@ -2,23 +2,17 @@
 
 import { useState } from "react";
 import { FinancialEntryListView } from "../financial-entry-list-view";
-import {
-  useAccounts,
-  useCancelEntry,
-  useEntries,
-  useSettleEntry,
-} from "@/lib/api/hooks";
+import { useCancelEntry, useEntries, useSettleEntry } from "@/lib/api/hooks";
 import type { ApiEntry } from "@/lib/api/generated";
 
 export function PagarList() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("Todos");
   const result = useEntries("EXPENSE", query, status);
-  const accounts = useAccounts();
   const settle = useSettleEntry();
   const cancel = useCancelEntry();
   async function settleEntry(entry: ApiEntry) {
-    const accountId = accounts.data?.data[0]?.id;
+    const accountId = entry.account?.id;
     const installmentId = entry.installments.find(
       (item) => item.status === "PENDING",
     )?.id;
@@ -42,7 +36,6 @@ export function PagarList() {
       onQuery={setQuery}
       status={status}
       onStatus={setStatus}
-      accountName={accounts.data?.data[0]?.name}
       onSettle={settleEntry}
       onDelete={(entry) => cancel.mutateAsync(entry.id)}
     />
