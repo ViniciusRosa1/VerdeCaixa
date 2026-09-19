@@ -8,7 +8,10 @@ export const metadata: Metadata = {
   description: "Controle financeiro simples para pequenas empresas.",
   applicationName: "Verde Caixa",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/icon.svg" },
+  icons: {
+    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     title: "Verde Caixa",
     description: "Finanças claras para pequenas empresas.",

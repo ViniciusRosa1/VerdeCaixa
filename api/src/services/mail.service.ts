@@ -1,23 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import nodemailer from 'nodemailer';
+import { Inject, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Resend } from "resend";
 
 @Injectable()
 export class MailService {
-  private readonly transporter;
+  private readonly resend: Resend;
   private readonly from: string;
 
   constructor(@Inject(ConfigService) config: ConfigService) {
-    this.from = config.get('SMTP_FROM', 'Verde Caixa <no-reply@verdecaixa.local>');
-    this.transporter = nodemailer.createTransport({
-      host: config.get('SMTP_HOST', 'localhost'),
-      port: Number(config.get('SMTP_PORT', 1025)),
-      secure: config.get('SMTP_SECURE', 'false') === 'true',
-      auth: config.get('SMTP_USER') ? { user: config.get('SMTP_USER'), pass: config.get('SMTP_PASSWORD') } : undefined,
-    });
+    this.resend = new Resend(config.getOrThrow<string>("RESEND_API_KEY"));
+    this.from = config.get("RESEND_FROM", "Verde Caixa <onboarding@resend.dev>");
   }
 
-  send(to: string, subject: string, text: string) {
-    return this.transporter.sendMail({ from: this.from, to, subject, text });
+  async send(to: string, subject: string, text: string) {
+    const { data, error } = await this.resend.emails.send({ from: this.from, to, subject, text });
+
+    if (error) {
+      throw new Error(`Resend: ${error.message}`);
+    }
+
+    return data;
   }
 }

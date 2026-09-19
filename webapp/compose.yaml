@@ -21,9 +21,8 @@ services:
       AUTH_ACCESS_SECRET: ${AUTH_ACCESS_SECRET}
       AUTH_REFRESH_SECRET: ${AUTH_REFRESH_SECRET}
       APP_ORIGIN: ${APP_ORIGIN:-http://localhost:8080}
-      SMTP_HOST: mailpit
-      SMTP_PORT: 1025
-      SMTP_FROM: ${SMTP_FROM:-Verde Caixa <no-reply@verdecaixa.local>}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      RESEND_FROM: ${RESEND_FROM:-Verde Caixa <onboarding@resend.dev>}
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,11 +53,6 @@ services:
         condition: service_healthy
       web:
         condition: service_started
-
-  mailpit:
-    image: axllent/mailpit:v1.27
-    ports:
-      - "8025:8025"
 
   seed:
     profiles: ["seed"]
